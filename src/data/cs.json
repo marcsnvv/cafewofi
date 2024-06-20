@@ -1,0 +1,422 @@
+[
+    {
+        "name": "Cometa",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipM9BtNpKdli-6WbGrKVwzxA79D8ar28wEGI4P-_=s680-w680-h510"
+        ],
+        "location": "C/ del Parlament, 20, Barcelona",
+        "data": {
+            "lat": 41.37588384375434,
+            "lng": 2.1619956697924865
+        },
+        "description": "Cafetería de moda que sirve cafés y aperitivos.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "10-20€"
+        },
+        "pluses": [
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": false,
+        "power_outlets": 10,
+        "rating": 1.5,
+        "reviews": [
+            {
+                "user": "Alice123",
+                "rating": 5,
+                "comment": "Fantastic place to work! The coffee is amazing."
+            },
+            {
+                "user": "WorkNomad",
+                "rating": 4,
+                "comment": "Great atmosphere for productivity."
+            }
+        ]
+    },
+    {
+        "name": "KASIBA | Cocina fusión Japofilipina de autor",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipPDZOWZ7JT0RW9xAVRGKtqckYrZqC88I6JOIu0V=s680-w680-h510"
+        ],
+        "location": "C. Islas Cíes, 7, 28924 Alcorcón, Madrid",
+        "data": {
+            "lat": 40.34514856728985,
+            "lng": -3.8093995875851587
+        },
+        "description": "A café that combines the best coffee with delicious bites. Plenty of seating and reliable Wi-FiUn espectacular espacio exótico donde transportamos al comensal a un paraíso de fusión.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "20-30€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 8,
+        "rating": 4.2,
+        "reviews": [
+            {
+                "user": "CoffeeLover22",
+                "rating": 4,
+                "comment": "Solid coffee and nice workspace."
+            },
+            {
+                "user": "RemoteCoder",
+                "rating": 4.5,
+                "comment": "Great place for coding sessions."
+            }
+        ]
+    },
+    {
+        "name": "Bastard Coffee & Kitchen",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipO8e5SJjdxlD7dgA85anHg7a7Py5prG6HIVBazj=s680-w680-h510"
+        ],
+        "location": "Carrer de Leandro de Saralegui, nº 1, BAJO-IZDA, 46021 Valencia",
+        "description": "BASTARD Coffee & Kitchen fusiona lo mejor de las cafeterías y restaurantes de comida casual y cosmopolita, cerca de Pl.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "10-20€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 6,
+        "rating": 4.7,
+        "reviews": [
+            {
+                "user": "ArtisticSoul",
+                "rating": 5,
+                "comment": "A hidden gem for artists and writers."
+            },
+            {
+                "user": "BookwormJane",
+                "rating": 4.5,
+                "comment": "Love the bookish ambiance!"
+            }
+        ]
+    },
+    {
+        "name": "La Casa Del Caffè Tazza D'oro",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipP1eJ_qX6T2SoJfotL6RbeqgSwQMCoJp6cBmRiy=s680-w680-h510"
+        ],
+        "location": "Rome, Metropolitan City of Rome Capital, Italia",
+        "description": "Cafetería concurrida con café y granita.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "10-20€"
+        },
+        "pluses": [
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 12,
+        "rating": 4.9,
+        "reviews": [
+            {
+                "user": "ElegantCoder",
+                "rating": 5,
+                "comment": "Exquisite coffee and ambiance."
+            },
+            {
+                "user": "MelodicMornings",
+                "rating": 4.7,
+                "comment": "Perfect place to start the day with a melody."
+            }
+        ]
+    },
+    {
+        "name": "The Grind Café",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipP_5TLjNvBOg-LH2dK5k_wU8Y1FIQY2EhMMlqE_=s680-w680-h510"
+        ],
+        "location": "Berlin, Alemania",
+        "description": "A bustling café in the heart of the city. Fuel your productivity with freshly brewed coffee.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "40-60€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 14,
+        "rating": 4.0,
+        "reviews": [
+            {
+                "user": "UrbanNomad",
+                "rating": 4,
+                "comment": "Chill place to sit in the sun and enjoy your coffee."
+            },
+            {
+                "user": "CoffeeHolic87",
+                "rating": 4.2,
+                "comment": "Good coffee and nice city views."
+            }
+        ]
+    },
+    {
+        "name": "Kaffeerösterei & Event Location",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipN3-zkjYIwPmIW00Zhh-yroKIdL__UksMx2rf_y=s680-w680-h510"
+        ],
+        "location": "Karl-Liebknecht-Str. 13, 10178 Berlin, Alemania",
+        "description": "A dedicated workspace café for tech enthusiasts. Fast Wi-Fi and ergonomic seating for coding and designing.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "20-40€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 20,
+        "rating": 4.6,
+        "reviews": [
+            {
+                "user": "TechieTaylor",
+                "rating": 4.5,
+                "comment": "Perfect for techies on the go."
+            },
+            {
+                "user": "DesignDiva",
+                "rating": 4.7,
+                "comment": "Great for creative work."
+            }
+        ]
+    },
+    {
+        "name": "Coworking Coffee",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipOI8eTXlFmg5EhrTeXIbm2LrSisKX1e627VkGOT=s680-w680-h510"
+        ],
+        "location": "333 Green Avenue, Greenside",
+        "description": "A serene café for those who seek refuge from the hustle and bustle. Sip coffee while working in tranquility.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "15-25€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 6,
+        "rating": 4.4,
+        "reviews": [
+            {
+                "user": "SereneSoul",
+                "rating": 4.6,
+                "comment": "A peaceful oasis for remote work."
+            },
+            {
+                "user": "ZenCoder",
+                "rating": 4.3,
+                "comment": "Zen-inspired atmosphere is a plus."
+            }
+        ]
+    },
+    {
+        "name": "Caffè dell'Arte Specialty Coffee",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipN83fIIMQvhkklvWfvJyWJrSX4o-uNsBE8HBkiR=s680-w680-h510"
+        ],
+        "location": "Cagliari, Metropolitan City of Cagliari, Italia",
+        "description": "A vibrant café with a jolt of energy. Perfect for dynamic professionals and entrepreneurs.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "5-10€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 16,
+        "rating": 4.3,
+        "reviews": [
+            {
+                "user": "EntrepreneurEve",
+                "rating": 4.4,
+                "comment": "Ideal for networking and meetings."
+            },
+            {
+                "user": "DynamicDuo",
+                "rating": 4.2,
+                "comment": "Energetic vibe for collaborative work."
+            }
+        ]
+    },
+    {
+        "name": "Monmouth Coffee Company",
+        "images": [
+            "https://lh3.googleusercontent.com/p/AF1QipOwVx0POT2hsg7N9kqJREz7H7WBkL1o4JoMPRe2=s680-w680-h510"
+        ],
+        "location": "London, Reino Unido",
+        "description": "A warm and welcoming café that feels like home. Perfect for a relaxed and productive workday.",
+        "menu": {
+            "coffee": [
+                "Espresso",
+                "Cappuccino",
+                "Latte"
+            ],
+            "food": [
+                "Croissants",
+                "Paninis",
+                "Quiches"
+            ],
+            "price": "10-20€"
+        },
+        "pluses": [
+            "Wifi",
+            "Atmosphere",
+            "Work spaces",
+            "Background music",
+            "Panoramic views",
+            "Events and Activities",
+            "Specialty Coffee Machines",
+            "Vegan or Gluten Free Menu"
+        ],
+        "wifi": true,
+        "power_outlets": 8,
+        "rating": 3.8,
+        "reviews": [
+            {
+                "user": "HomelyHannah",
+                "rating": 4.9,
+                "comment": "Feels like working in your own living room."
+            },
+            {
+                "user": "ProductivePaul",
+                "rating": 4.7,
+                "comment": "Cozy and productive – a rare combination!"
+            }
+        ]
+    }
+]
