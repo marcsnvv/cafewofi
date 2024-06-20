@@ -28,7 +28,15 @@ const nextConfig = {
         serverActions: {
             bodySizeLimit: "3mb"
         }
-    }
+    },
+    async rewrites() {
+        return [
+            {
+                source: '/ui',
+                destination: '/',
+            },
+        ]
+    },
 }
 
 module.exports = nextConfig
