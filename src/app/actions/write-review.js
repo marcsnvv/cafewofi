@@ -3,15 +3,16 @@
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 
 export async function WriteReviewAction(formData) {
     const supabase = createServerActionClient({ cookies });
     const { data: { session } } = await supabase.auth.getSession();
 
-    const content = formData.get("content");
-    const cafeId = formData.get("cafe_id");
-    const authorId = formData.get("author_id");
-    const rating = formData.get("rating");
+    const content = formData.get("content")
+    const cafeId = formData.get("cafe_id")
+    const authorId = formData.get("author_id")
+    const rating = formData.get("rating")
 
     try {
         // Realizar validaciones de contenido aquí antes de la inserción
@@ -36,7 +37,8 @@ export async function WriteReviewAction(formData) {
         }
 
         console.log('Review inserted successfully:', reviewData)
-        revalidatePath("/cafe/" + cafeId)
+        revalidatePath("/cafe")
+        redirect("/cafe/" + cafeId)
     } catch (error) {
         console.error('Error inserting review:', error.message);
         throw error;

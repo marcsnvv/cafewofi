@@ -35,9 +35,9 @@ export default function Review({ data, avatar, name, username }) {
     }, [data])
 
     return (
-        <Link href={linkTo ? linkTo : `/cafe/${data.cafe_id}`} className="grid gap-4 p-5 rounded-lg hover:bg-lightgray">
-            <div className="grid gap-4">
-                <div className="flex items-center justify-between">
+        <Link href={linkTo ? linkTo : `/cafe/${data.cafe_id}`} className="grid gap-4 p-4 rounded-lg hover:bg-lightgray w-full">
+            <div className="grid gap-4 w-full">
+                <div className="flex items-start justify-between w-full">
                     <div className="flex items-center gap-4">
                         {av ? (
                             <img src={av} className="w-[45px] h-[45px] rounded-full" />
@@ -47,7 +47,7 @@ export default function Review({ data, avatar, name, username }) {
                             </Label>
                         )}
                         <div className="grid">
-                            <div className="flex items-center justify-start gap-4">
+                            <div className="flex items-center justify-start gap-2">
                                 <span className="font-semibold">{nm}</span>
                                 <div className="flex items-center">
                                     <div className="mt-1">
@@ -60,24 +60,19 @@ export default function Review({ data, avatar, name, username }) {
                                 {ETS(data.created_at)}
                             </span>
                         </div>
-                    </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                            <Star opacity="1" />
-                            <Star opacity="1" />
-                            <Star opacity="1" />
-                            <Star opacity="1" />
-                            <Star />
-                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Star opacity="1" />
                         <span>{data.rating}</span>
                     </div>
                 </div>
             </div>
 
-            <span className="text-lg">
+            <span className="break-words">
                 {data.content}
             </span>
+
         </Link >
     )
 }

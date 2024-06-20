@@ -27,9 +27,9 @@ export default function Topbar({ avatar, ...props }) {
     }
 
     return (
-        <nav className="z-50 fixed bg-white w-full p-4 lg:px-8 shadow-sm">
-            <div className="flex flex-row justify-between">
-                <div className="flex justify-between lg:gap-8 gap-4 lg:w-1/3">
+        <nav className="z-50 fixed bg-white w-full p-4 lg:px-8 shadow-sm flex items-center justify-between">
+            <div className="flex justify-between w-full">
+                <div className="flex justify-between lg:gap-8 gap-4 lg:w-1/3 w-auto">
                     <Link href="/" className="flex gap-2 items-center">
                         <Image src="/cwf.png" width={50} height={50} alt="CWF Logo" />
                         {/* <span className="hidden lg:block text-xl font-extrabold text-darkgray">CoffeeWorkFinder</span> */}
@@ -37,7 +37,7 @@ export default function Topbar({ avatar, ...props }) {
                     {props.noSearch === undefined ? <div className="relative flex flex-row items-center lg:w-full">
                         <input
                             placeholder="New York"
-                            className="w-full text-darkgray font-medium bg-brand/30 rounded-md p-2 px-4 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-opacity-50"
+                            className="max-w-[200px] text-darkgray font-medium bg-brand/30 rounded-md p-2 px-4 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-opacity-50"
                             value={props.place}
                             onChange={(e) => props.setPlace(e.target.value)}
                         />

@@ -37,6 +37,10 @@ export default function Cafe({ params }) {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        console.log(pending)
+    }, [pending])
+
+    useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
             const { data, error } = await supabase
@@ -82,6 +86,7 @@ export default function Cafe({ params }) {
         event.preventDefault()
         setReviewStars(0)
         document.getElementById("content").value = ""
+        // window.location("/cafe/" + data.cafe_id)
     }
 
 
@@ -131,7 +136,10 @@ export default function Cafe({ params }) {
                     <div className="flex items-center gap-5">
                         <Tag size="24" color="#111111" />
                         <span>
-                            <span className="font-semibold">Category:</span> {data?.category}
+                            <span className="font-semibold">Category:</span>{" "}
+                            {data?.category && data.category.length > 30
+                                ? `${data.category.slice(0, 20)}...`
+                                : data?.category}
                         </span>
                     </div>
                     <div className="flex items-center gap-5">
@@ -188,7 +196,7 @@ export default function Cafe({ params }) {
                             <Star opacity={reviewStars >= 5 ? "1" : "0.3"} />
                         </button>
                     </div>
-                    <form className="relative grid gap-4" action={WriteReviewAction} disabled={pending}>
+                    <form className="relative grid gap-4" id="reviewForm" action={WriteReviewAction} disabled={pending}>
                         <input className="hidden" name="cafe_id" value={data.cafe_id} />
                         <input className="hidden" name="author_id" value={sid} />
                         <input className="hidden" name="rating" value={reviewStars} />
@@ -215,7 +223,7 @@ export default function Cafe({ params }) {
                                 variant="primary-rounded"
                                 type="submit"
                                 disabled={formError != null && true}
-                                onClick={(e) => clearForm(e)}
+                            // onClick={(e) => clearForm(e)}
                             >
                                 <PaperPlane size="20" color="white" />
                             </Button>
@@ -225,12 +233,16 @@ export default function Cafe({ params }) {
                         <span className="text-red-500">{formError}</span>
                     }
 
-                    {data?.reviews.map((review, index) =>
-                        <Review
-                            key={index}
-                            data={review}
-                        />
-                    )}
+                    {data?.reviews &&
+                        data.reviews
+                            .slice() // Hacemos una copia para no modificar el array original
+                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                            .map((review, index) => (
+                                <Review
+                                    key={index}
+                                    data={review}
+                                />
+                            ))}
                 </div>
             </section>}
         </main>

@@ -84,32 +84,40 @@ export default async function Account() {
                         <h3 className="font-semibold font-nyght text-xl">Cafes you like</h3>
 
                         <div className="grid grid-cols-2 gap-5">
-                            {likes && likes.map((coffee, index) => (
-                                <CoffeeCard
-                                    key={index}
-                                    props={{ likes }}
-                                    data={coffee}
-                                    size="xs"
-                                />
-                            ))}
+                            {likes &&
+                                likes
+                                    .slice() // Hacemos una copia para no modificar el array original
+                                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                                    .map((coffee, index) => (
+                                        <CoffeeCard
+                                            key={index}
+                                            props={{ likes }}
+                                            data={coffee}
+                                            size="xs"
+                                        />
+                                    ))}
                         </div>
                     </div>
                 </section>
 
-                <section className="p-5 mt-20 lg:w-1/2 w-full">
+                <section className="p-5 mt-20 lg:w-1/2 w-auto">
                     <div className="flex flex-col gap-5">
                         <h3 className="font-semibold font-nyght text-xl">Your reviews</h3>
 
                         <div className="flex flex-wrap gap-5">
-                            {reviews && reviews.map((review, index) => (
-                                <Review
-                                    key={index}
-                                    data={review}
-                                    avatar={profile.avatar_url}
-                                    name={name}
-                                    username={profile.username}
-                                />
-                            ))}
+                            {reviews &&
+                                reviews
+                                    .slice() // Hacemos una copia para no modificar el array original
+                                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                                    .map((review, index) => (
+                                        <Review
+                                            key={index}
+                                            data={review}
+                                            avatar={profile.avatar_url}
+                                            name={name}
+                                            username={profile.username}
+                                        />
+                                    ))}
                         </div>
                     </div>
                 </section>
