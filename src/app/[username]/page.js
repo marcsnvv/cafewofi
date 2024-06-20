@@ -90,8 +90,9 @@ export default function User({ params }) {
                         <h3 className="font-semibold font-nyght text-xl">Cafes you like</h3>
 
                         <div className="grid grid-cols-2 gap-5">
-                            {likes && likes.map(coffee => (
+                            {likes && likes.map((coffee, index) => (
                                 <CoffeeCard
+                                    key={index}
                                     props={{ likes }}
                                     data={coffee}
                                     size="xs"
