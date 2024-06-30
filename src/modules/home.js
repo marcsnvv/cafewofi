@@ -4,11 +4,13 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
-import { Search } from "@/modules/icons"
+import { Search, User } from "@/modules/icons"
 import Loading from "../components/loading"
 import UserCard from "@/components/user-card"
 import Topbar from "@/components/topbar"
 import Typewriter from 'typewriter-effect'
+import Label from "@/components/label"
+import Popup from "@/components/popup"
 
 const workplaces = [
     "Barcelona",
@@ -39,22 +41,28 @@ export default function HomePage({ name, avatar }) {
     const router = useRouter()
     const [query, setQuery] = useState("")
     const [loading, setLoading] = useState(false)
+    const [showModal, setShowModal] = useState(false)
 
-    function searchCW() {
+    function searchCW(e) {
+        e.preventDefault()
         setLoading(true)
-
-        if (query === undefined || query.trim() === "") {
-            setLoading(false)
-            return
+        if (!avatar && !name) {
+            setShowModal(true)
         } else {
-            let q = query.toLowerCase().split(" ")
-            router.push(`/search/${q.join("/")}`)
+            if (query === undefined || query.trim() === "") {
+                setLoading(false)
+                return
+            } else {
+                let q = query.toLowerCase().split(" ")
+                router.push(`/search/${q.join("/")}`)
+            }
         }
+
     }
 
     function handleKeyPress(event) {
         if (event.key === 'Enter') {
-            searchCW()
+            searchCW(event)
         }
     }
 
@@ -100,7 +108,7 @@ export default function HomePage({ name, avatar }) {
                     />
                     <button
                         disabled={loading}
-                        onClick={searchCW}
+                        onClick={(e) => searchCW(e)}
                         className="absolute right-2 bg-brand text-white rounded-full p-1.5"
                     >
                         {loading ? <Loading size={16} /> : <Search color="white" size={16} />}
@@ -113,6 +121,12 @@ export default function HomePage({ name, avatar }) {
                     Terms & Conditions
                 </span>
             </Link>
+
+            {showModal && (
+                <Popup
+                    opened
+                />
+            )}
         </div>
     )
 }

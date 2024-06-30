@@ -38,9 +38,9 @@ export default function LoginForm() {
 
     return (
         <form
-            action="/auth/login"
+            action="/auth/sign-up"
             method="post"
-            className="grid gap-4 max-w-[205px]"
+            className="grid gap-4"
         >
             <div className="grid gap-2">
                 <label className={`font-bold ${inputError ? "text-red-500" : "text-gray"}`}>Email</label>
@@ -79,7 +79,7 @@ export default function LoginForm() {
                 variant="primary"
                 onClick={(e) => checkFormValidation(e)}
             >
-                Log In
+                Sign Up
             </Button>
         </form>
     )

@@ -72,8 +72,8 @@ export default function signInWithOAuth({
                     <span className="text-darkgray font-bold">Continue With Email</span>
                 </div>
             </Button>
-            <span className="text-xs font-roboto">
-                By entering, I accept CWF Terms & Conditions of Use and Privacy Policy
+            <span className="text-xs font-roboto text-center">
+                By entering, I accept CWF <Link href={"/terms"}>Terms & Conditions</Link> of Use and <Link href={"/privacy"}>Privacy Policy</Link>
             </span>
         </form>
     )

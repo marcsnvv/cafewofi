@@ -11,7 +11,7 @@ export default function Login({
     const [withEmail, setWithEmail] = useState(false)
 
     return (
-        <div className="bg-white p-2 rounded-lg flex flex-col gap-4">
+        <div className="relative bg-white p-2 rounded-lg flex flex-col gap-4">
             <button
                 className="absolute z-50 top-4 right-4 p-2 rounded-full hover:bg-gray/25"
                 onClick={() => setModal(false)}

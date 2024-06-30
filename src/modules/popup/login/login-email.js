@@ -9,7 +9,7 @@ export default function SignUpWithEmail({
 }) {
     return (
         <div className='p-10 flex flex-col items-center gap-4'>
-            <label className="font-nyght text-2xl">Login</label>
+            <label className="font-nyght text-2xl">Register</label>
 
             <LoginForm
                 closeModal={closeModal}

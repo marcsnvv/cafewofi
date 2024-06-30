@@ -9,10 +9,10 @@ export default async function Home() {
   const { data: user, error } = await supabase
     .from("users")
     .select("*")
-    .eq("id", session.user.id)
+    .eq("id", session?.user?.id)
 
-  const name = user[0]?.name
-  const avatar = user[0]?.avatar_url
+  const name = user?.[0]?.name
+  const avatar = user?.[0]?.avatar_url
 
   return (
     <HomePage name={name} avatar={avatar} />
