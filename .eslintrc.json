@@ -4,6 +4,7 @@
   ],
   "rules": {
     "react/no-unescaped-entities": "off",
-    "react/jsx-key": "off"
+    "react/jsx-key": "off",
+    "react/jsx-no-undef": "off"
   }
 }
