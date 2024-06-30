@@ -1,7 +1,6 @@
 "use client"
 
 export function initMap(map, coffees) {
-    console.log(coffees)
     const styledMapType = new google.maps.StyledMapType(
         [
             { elementType: "geometry", stylers: [{ color: "#E8E8E8" }] },
@@ -175,11 +174,8 @@ export function initMap(map, coffees) {
         path: [{}]
     })
 
-
-
-
     coffees.map((coffee, index) => {
-        new google.maps.Marker({
+        new google.maps.marker.AdvancedMarkerElement({
             position: { lat: coffee.lng, lng: coffee.lat },
             map: map,
             icon: [

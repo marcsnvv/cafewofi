@@ -51,8 +51,13 @@ export default function Cafe({ params }) {
             setIsOpened(isOpen(data[0].opening_hours))
             setIsBusy(isBusyToday(data[0].popular_times))
 
-            setAvatar(session.user.user_metadata.avatar_url)
-            setName(session.user.user_metadata.name)
+            const { data: user } = await supabase
+                .from("users")
+                .select("avatar_url, name")
+                .eq("id", session.user.id)
+
+            setAvatar(user[0].avatar_url)
+            setName(user[0].name)
             setSid(session.user.id)
 
             setData(data[0])
@@ -82,13 +87,12 @@ export default function Cafe({ params }) {
         setFormError(null)
     }
 
-    function clearForm(event) {
-        event.preventDefault()
-        setReviewStars(0)
-        document.getElementById("content").value = ""
-        // window.location("/cafe/" + data.cafe_id)
-    }
-
+    // function clearForm(event) {
+    //     event.preventDefault()
+    //     setReviewStars(0)
+    //     document.getElementById("content").value = ""
+    //     // window.location("/cafe/" + data.cafe_id)
+    // }
 
     return (
         <main>
@@ -96,153 +100,157 @@ export default function Cafe({ params }) {
                 avatar={avatar}
                 name={name}
             />
-            {!loading && <section className="p-5 pt-28 flex flex-col gap-5">
-                <h1 className="text-5xl font-nyght">{data?.name}</h1>
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-5">
-                        {data?.is_verified && <div className="flex items-center gap-2">
-                            <Verified />
+            {!loading && <section className="p-5 pt-28 flex lg:flex-row flex-col gap-5">
+                <div className="flex flex-col gap-5 lg:w-2/3">
+                    <h1 className="text-5xl font-nyght">{data?.name}</h1>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-5">
+                            {data?.is_verified && <div className="flex items-center gap-2">
+                                <Verified />
+                                <span>
+                                    Verified
+                                </span>
+                            </div>}
+                            <div className="flex items-center gap-2">
+                                <Star opacity="1" />
+                                <span className="font-semibold">
+                                    {data?.score}
+                                </span>
+                                <span>
+                                    ({data?.ratings})
+                                </span>
+                            </div>
+                            <Link href={`https://www.google.es/maps/place/${data?.address.replace(" ", "+").replace("/", "+")}`} className="flex items-center gap-2 underline hover:text-brand">
+                                <Location size="24" color="#CC7843" />
+                                <span>
+                                    {data?.address}
+                                </span>
+                            </Link>
+
+                        </div>
+                    </div>
+                    <Image
+                        src={data?.main_image_url}
+                        width={1080}
+                        height={1080}
+                        className="rounded-lg"
+                        alt={data?.name}
+                    />
+                </div>
+                <div className="flex flex-col gap-5 lg:w-1/3">
+                    <hr className="text-gray lg:hidden" />
+                    <div className="flex flex-col gap-5 p-5 text-lg">
+                        <div className="flex items-center gap-5">
+                            <Tag size="24" color="#111111" />
                             <span>
-                                Verified
-                            </span>
-                        </div>}
-                        <div className="flex items-center gap-2">
-                            <Star opacity="1" />
-                            <span className="font-semibold">
-                                {data?.score}
-                            </span>
-                            <span>
-                                ({data?.ratings})
+                                <span className="font-semibold">Category:</span>{" "}
+                                {data?.category && data.category.length > 30
+                                    ? `${data.category.slice(0, 20)}...`
+                                    : data?.category}
                             </span>
                         </div>
-                        <Link href={`https://www.google.es/maps/place/${data?.address.replace(" ", "+").replace("/", "+")}`} className="flex items-center gap-2 underline hover:text-brand">
-                            <Location size="24" color="#CC7843" />
+                        <div className="flex items-center gap-5">
+                            <Dollar size="24" color="#111111" />
                             <span>
-                                {data?.address}
+                                <span className="font-semibold">Price:</span> {data?.price}
                             </span>
-                        </Link>
-
+                        </div>
+                        <div className="flex items-center gap-5">
+                            <Phone size="24" color="#111111" />
+                            <span>
+                                <span className="font-semibold">Phone number:</span> {data?.phone}
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <Image
-                    src={data?.main_image_url}
-                    width={1080}
-                    height={1080}
-                    className="rounded-lg"
-                    alt={data?.name}
-                />
-                <hr className="text-gray" />
-                <div className="flex flex-col gap-5 p-5 text-lg">
-                    <div className="flex items-center gap-5">
-                        <Tag size="24" color="#111111" />
-                        <span>
-                            <span className="font-semibold">Category:</span>{" "}
-                            {data?.category && data.category.length > 30
-                                ? `${data.category.slice(0, 20)}...`
-                                : data?.category}
-                        </span>
+                    <hr className="text-gray lg:hidden" />
+                    <div className="flex flex-col gap-5 p-5 text-lg">
+                        <div className="flex items-center gap-5">
+                            <Clock size="24" color="#111111" />
+                            <span className="flex items-center gap-5">
+                                <span className="font-semibold">Opening hours:</span> {isOpened ?
+                                    <Label variant="green">Opened</Label> :
+                                    <Label variant="red">Closed</Label>
+                                }
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-5">
+                            <Flame size="24" color="#111111" />
+                            <span className="flex items-center gap-5">
+                                <span className="font-semibold">Popular times:</span> {isBusy ?
+                                    <Label variant="orange">It's a little crowded</Label> :
+                                    <Label variant="green">It's not busy</Label>
+                                }
+                            </span>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-5">
-                        <Dollar size="24" color="#111111" />
-                        <span>
-                            <span className="font-semibold">Price:</span> {data?.price}
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-5">
-                        <Phone size="24" color="#111111" />
-                        <span>
-                            <span className="font-semibold">Phone number:</span> {data?.phone}
-                        </span>
-                    </div>
-                </div>
-                <hr className="text-gray"></hr>
-                <div className="flex flex-col gap-5 p-5 text-lg">
-                    <div className="flex items-center gap-5">
-                        <Clock size="24" color="#111111" />
-                        <span className="flex items-center gap-5">
-                            <span className="font-semibold">Opening hours:</span> {isOpened ?
-                                <Label variant="green">Opened</Label> :
-                                <Label variant="red">Closed</Label>
-                            }
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-5">
-                        <Flame size="24" color="#111111" />
-                        <span className="flex items-center gap-5">
-                            <span className="font-semibold">Popular times:</span> {isBusy ?
-                                <Label variant="orange">It's a little crowded</Label> :
-                                <Label variant="green">It's not busy</Label>
-                            }
-                        </span>
-                    </div>
-                </div>
-                <hr className="text-gray"></hr>
-                <div className="flex flex-col gap-5">
-                    <span className="font-nyght text-2xl">Reviews</span>
-                    <div className="flex items-center gap-2">
-                        <button onClick={() => setReviewStars(1)}>
-                            <Star opacity={reviewStars >= 1 ? "1" : "0.3"} />
-                        </button>
-                        <button onClick={() => setReviewStars(2)}>
-                            <Star opacity={reviewStars >= 2 ? "1" : "0.3"} />
-                        </button>
-                        <button onClick={() => setReviewStars(3)}>
-                            <Star opacity={reviewStars >= 3 ? "1" : "0.3"} />
-                        </button>
-                        <button onClick={() => setReviewStars(4)}>
-                            <Star opacity={reviewStars >= 4 ? "1" : "0.3"} />
-                        </button>
-                        <button onClick={() => setReviewStars(5)}>
-                            <Star opacity={reviewStars >= 5 ? "1" : "0.3"} />
-                        </button>
-                    </div>
-                    <form className="relative grid gap-4" id="reviewForm" action={WriteReviewAction} disabled={pending}>
-                        <input className="hidden" name="cafe_id" value={data.cafe_id} />
-                        <input className="hidden" name="author_id" value={sid} />
-                        <input className="hidden" name="rating" value={reviewStars} />
-                        <textarea
-                            onChange={(e) => validateForm(e)}
-                            name="content"
-                            id="content"
-                            // onResize={ }
-                            minLength={1}
-                            maxLength={350}
-                            rows={3}
-                            wrap
-                            className={`
+                    <hr className="text-gray lg:hidden" />
+                    <div className="flex flex-col gap-5">
+                        <span className="font-nyght text-2xl">Reviews</span>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setReviewStars(1)}>
+                                <Star opacity={reviewStars >= 1 ? "1" : "0.3"} />
+                            </button>
+                            <button onClick={() => setReviewStars(2)}>
+                                <Star opacity={reviewStars >= 2 ? "1" : "0.3"} />
+                            </button>
+                            <button onClick={() => setReviewStars(3)}>
+                                <Star opacity={reviewStars >= 3 ? "1" : "0.3"} />
+                            </button>
+                            <button onClick={() => setReviewStars(4)}>
+                                <Star opacity={reviewStars >= 4 ? "1" : "0.3"} />
+                            </button>
+                            <button onClick={() => setReviewStars(5)}>
+                                <Star opacity={reviewStars >= 5 ? "1" : "0.3"} />
+                            </button>
+                        </div>
+                        <form className="relative grid gap-4" id="reviewForm" action={WriteReviewAction} disabled={pending}>
+                            <input className="hidden" name="cafe_id" value={data.cafe_id} />
+                            <input className="hidden" name="author_id" value={sid} />
+                            <input className="hidden" name="rating" value={reviewStars} />
+                            <textarea
+                                onChange={(e) => validateForm(e)}
+                                name="content"
+                                id="content"
+                                // onResize={ }
+                                minLength={1}
+                                maxLength={350}
+                                rows={3}
+                                wrap
+                                className={`
                     ${formError
-                                    ? "border-2 border-red-500 bg-red-200 focus:outline-none"
-                                    : "focus:outline-none focus:ring-2 focus:ring-brand"}
+                                        ? "border-2 border-red-500 bg-red-200 focus:outline-none"
+                                        : "focus:outline-none focus:ring-2 focus:ring-brand"}
                     bg-lightbrand rounded-lg p-4 resize-y min-h-[100px] max-h-[205px] overflow-hidden
                     `}
-                            placeholder="Write a review..."
-                        />
+                                placeholder="Write a review..."
+                            />
 
-                        <div className="absolute right-2 bottom-2">
-                            <Button
-                                variant="primary-rounded"
-                                type="submit"
-                                disabled={formError != null && true}
-                            // onClick={(e) => clearForm(e)}
-                            >
-                                <PaperPlane size="20" color="white" />
-                            </Button>
-                        </div>
-                    </form>
-                    {formError &&
-                        <span className="text-red-500">{formError}</span>
-                    }
+                            <div className="absolute right-2 bottom-2">
+                                <Button
+                                    variant="primary-rounded"
+                                    type="submit"
+                                    disabled={formError != null && true}
+                                // onClick={(e) => clearForm(e)}
+                                >
+                                    <PaperPlane size="20" color="white" />
+                                </Button>
+                            </div>
+                        </form>
+                        {formError &&
+                            <span className="text-red-500">{formError}</span>
+                        }
 
-                    {data?.reviews &&
-                        data.reviews
-                            .slice() // Hacemos una copia para no modificar el array original
-                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
-                            .map((review, index) => (
-                                <Review
-                                    key={index}
-                                    data={review}
-                                />
-                            ))}
+                        {data?.reviews &&
+                            data.reviews
+                                .slice() // Hacemos una copia para no modificar el array original
+                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                                .map((review, index) => (
+                                    <Review
+                                        key={index}
+                                        data={review}
+                                    />
+                                ))}
+                    </div>
                 </div>
             </section>}
         </main>

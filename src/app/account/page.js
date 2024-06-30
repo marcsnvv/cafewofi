@@ -12,6 +12,7 @@ import ThumbnailUploader from "@/components/thumbnail"
 
 // BADGES
 import { Verified, CoffeeMaker, WorkCafe } from "@/modules/badges"
+import { At } from "@/modules/icons"
 import Tooltip from "@/components/tooltip"
 
 export default async function Account() {
@@ -40,7 +41,13 @@ export default async function Account() {
 
     return (
         <main>
-            <Topbar avatar={profile.avatar_url} name={name} noSearch />
+            <Topbar
+                avatar={profile.avatar_url}
+                name={name}
+                noSearch
+                uAuto
+                username={profile.username}
+            />
             <section>
                 {/* User thumbnail */}
                 <ThumbnailUploader thumbnail_url={profile.thumbnail} userId={session.user.id} />
@@ -69,7 +76,12 @@ export default async function Account() {
                                 )}
                             </div>
                         </div>
-                        <h2 className="text-lg text-gray font-roboto">@{profile.username}</h2>
+                        <h2 className="text-lg text-gray font-roboto flex items-center justify-center gap-1">
+                            <div className="mt-1">
+                                <At />
+                            </div>
+                            {profile?.username}
+                        </h2>
                         <span className="text-sm text-gray">
                             Member since {ETS(profile.created_at)}
                         </span>
@@ -77,9 +89,8 @@ export default async function Account() {
                 </div>
             </section>
 
-            <main className="flex lg:flex-row flex-col justify-between">
-
-                <section className="p-5 lg:w-1/2 w-full">
+            <section className="flex lg:flex-row flex-col justify-between">
+                <div className="p-5 lg:w-1/2 w-full">
                     <div className="flex flex-col gap-5">
                         <h3 className="font-semibold font-nyght text-xl">Cafes you like</h3>
 
@@ -98,9 +109,9 @@ export default async function Account() {
                                     ))}
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <section className="p-5 mt-20 lg:w-1/2 w-auto">
+                <div className="p-5 mt-20 lg:w-1/2 w-auto">
                     <div className="flex flex-col gap-5">
                         <h3 className="font-semibold font-nyght text-xl">Your reviews</h3>
 
@@ -120,10 +131,8 @@ export default async function Account() {
                                     ))}
                         </div>
                     </div>
-                </section>
-            </main>
-
-
+                </div>
+            </section>
         </main>
     )
 }

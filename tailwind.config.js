@@ -3,6 +3,7 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/modules/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -28,10 +29,10 @@ module.exports = {
         '3xs': '.625rem',
         '4xs': '.75rem',
         '5xs': '.875rem',
-        '6xs': '1rem',
-        '7xl': '5rem',
-        '8xl': '6rem',
-        '9xl': '8rem',
+        '6xs': '1em',
+        '7xl': '5em',
+        '8xl': '6em',
+        '9xl': '8em',
       },
     },
   },

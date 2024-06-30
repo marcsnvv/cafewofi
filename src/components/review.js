@@ -56,9 +56,9 @@ export default function Review({ data, avatar, name, username }) {
                                     <span className="text-gray">{un}</span>
                                 </div>
                             </div>
-                            <span className="text-sm text-gray">
+                            <time datetime={data.created_at} className="text-sm text-gray">
                                 {ETS(data.created_at)}
-                            </span>
+                            </time>
                         </div>
 
                     </div>

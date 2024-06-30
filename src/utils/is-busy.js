@@ -11,10 +11,14 @@ export function isBusyToday(dataString) {
     parts.forEach(part => {
         const [day, ...entries] = part.split(': ');
         const dayName = day.trim().toLowerCase();
-        data[dayName] = entries.map(entry => {
-            const [hour, percentage] = entry.split(' ');
-            return { hour: parseInt(hour), percentage: parseInt(percentage) };
-        });
+        if (entries.includes('closed')) {
+            data[dayName] = 'closed';
+        } else {
+            data[dayName] = entries.map(entry => {
+                const [hour, percentage] = entry.split(' ');
+                return { hour: parseInt(hour), percentage: parseInt(percentage) };
+            });
+        }
     });
 
     // Obtener el nombre del día actual en inglés (para el ejemplo dado)
@@ -26,6 +30,11 @@ export function isBusyToday(dataString) {
 
     if (!todayData) {
         throw new Error(`No data found for ${currentDayName}.`);
+    }
+
+    // Verificar si el día está cerrado
+    if (todayData === 'closed') {
+        return false; // El día está cerrado, por lo tanto, no está concurrido
     }
 
     // Obtener la hora actual en formato HH (sin minutos)
@@ -51,9 +60,5 @@ export function isBusyToday(dataString) {
     const busyThreshold = 70; // Porcentaje de afluencia para considerar que es un día concurrido
 
     // Comparar el porcentaje actual con el umbral
-    if (currentHourData.percentage >= busyThreshold) {
-        return true; // Día concurrido
-    } else {
-        return false; // Día no concurrido
-    }
+    return currentHourData.percentage >= busyThreshold;
 }

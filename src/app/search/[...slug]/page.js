@@ -12,8 +12,10 @@ export default async function Search({ params }) {
         redirect("/")
     }
 
-    const avatar = session?.user?.user_metadata?.avatar_url
-    const name = session?.user?.user_metadata?.full_name
+    let { data: user } = await supabase
+        .from("users")
+        .select("avatar_url, name")
+        .eq("id", session.user.id)
 
     let { data: likes } = await supabase
         .from("likes")
@@ -23,6 +25,9 @@ export default async function Search({ params }) {
     let { data: cafes, error } = await supabase
         .from('cafes')
         .select('*')
+
+    const name = user[0]?.name
+    const avatar = user[0]?.avatar_url
 
 
     return (
