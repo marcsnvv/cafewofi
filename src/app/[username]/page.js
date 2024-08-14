@@ -1,67 +1,145 @@
 "use client"
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@/utils/supabase/client"
 import { useEffect, useState } from "react"
-
 import Image from "next/image"
 import Topbar from "@/components/topbar"
-
 import CoffeeCard from "@/components/cafe-card"
 import Review from "@/components/review"
-
 import ETS from "@/utils/elapsed"
 import Thumbnail from "@/components/thumbnail"
-
+import Tooltip from "@/components/tooltip"
+import { Verified, WorkCafe, CoffeeMaker } from "@/modules/badges"
 import { At } from "@/modules/icons"
+import addFriend from "@/app/actions/add-friend"
 
 export default function User({ params }) {
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
     const [loading, setLoading] = useState(true)
     const [profile, setProfile] = useState()
     const [reviews, setReviews] = useState()
     const [likes, setLikes] = useState()
     const [avatar, setAvatar] = useState()
+    const [friendStatus, setFriendStatus] = useState()
+    const [isFriend, setIsFriend] = useState(false)
 
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
             setAvatar(session?.user?.user_metadata?.avatar_url)
-            const { data, error } = await supabase
+
+            // Obtener datos del usuario
+            const { data: userData, error: userError } = await supabase
                 .from('users')
                 .select(`
-                    *,
-                    reviews(*),
-                    likes(cafe_id, cafes(*))
+                    id,
+                    username,
+                    name,
+                    avatar_url,
+                    thumbnail,
+                    is_premium,
+                    is_verified,
+                    is_coffeemaker,
+                    created_at
                 `)
                 .eq('username', params.username)
+                .single()
 
-            if (error) {
-                console.error('Error fetching data:', error)
+            if (userError || !session?.user) {
+                console.log(userError)
                 return
             }
 
-            if (data[0]?.id === session.user.id) {
-                window.location.href = "/account";
+            // Obtener revisiones del usuario
+            const { data: reviewsData, error: reviewsError } = await supabase
+                .from('reviews')
+                .select('*')
+                .eq('author_id', userData.id)
+
+            if (reviewsError) {
+                console.log(reviewsError)
+                return
             }
 
-            setProfile(data[0])
-            setReviews(data[0]?.reviews)
-            setLikes(data[0]?.likes.map(like => like.cafes))
+            // Obtener gustos del usuario
+            const { data: likesData, error: likesError } = await supabase
+                .from('likes')
+                .select(`
+                    cafes (
+                        cafe_id,
+                        name
+                    )
+                `)
+                .eq('user_id', userData.id)
+
+            if (likesError) {
+                console.log(likesError)
+                return
+            }
+
+            // Obtener amigos del usuario
+            const { data: friendsData, error: friendsError } = await supabase
+                .from('friends')
+                .select('friend_id')
+                .eq('user_id', userData.id)
+
+            if (friendsError) {
+                console.log(friendsError)
+                return
+            }
+
+            // Obtener notificaciones del usuario
+            const { data: notificationsData, error: notificationsError } = await supabase
+                .from('notifications')
+                .select('status')
+                .eq('sender_id', session.user.id)
+                .eq('recipient_id', userData.id)
+                .eq('type', 'friend_request')
+                .single()
+
+            if (notificationsError) {
+                console.log(notificationsError)
+            }
+
+            const isFriend = friendsData?.some(friend => friend.friend_id === session.user.id)
+            setFriendStatus(notificationsData?.status)
+            setIsFriend(isFriend)
+            setProfile(userData)
+            setReviews(reviewsData)
+            setLikes(likesData?.map(like => like.cafes))
             setLoading(false)
         }
+
         params && getData()
     }, [params])
+
+    const handleAddFriend = async () => {
+        try {
+            const result = await addFriend({ recipient_id: profile.id })
+            if (result.status === 'success') {
+                setFriendStatus('pending')
+            } else if (result.status === 'error') {
+                console.log(result.message)
+                if (result.message.includes('unique_friendship')) {
+                    setFriendStatus('pending')
+                }
+            }
+        } catch (error) {
+            console.error("Error sending friend request:", error)
+        }
+    }
+
+    if (loading) return <div>Loading...</div>
 
     return (
         <main>
             <Topbar
-                avatar={avatar}
+                avatar_url={avatar}
                 noSearch
                 uAuto
                 username={profile?.username}
             />
             <section>
-                {/* User thumbnail */}
                 <Thumbnail
                     thumbnail_url={profile?.thumbnail}
                     userId={profile?.id}
@@ -105,10 +183,20 @@ export default function User({ params }) {
                 </div>
             </section>
 
+            <section className="flex flex-col items-center mt-4">
+                {isFriend ? (
+                    <button className="btn btn-disabled">Already Friends</button>
+                ) : friendStatus === 'pending' ? (
+                    <button className="btn btn-disabled">Friend Request Sent</button>
+                ) : (
+                    <button onClick={handleAddFriend} className="btn btn-primary">Add Friend</button>
+                )}
+            </section>
+
             <section className="flex lg:flex-row flex-col justify-between">
                 <div className="p-5 lg:w-1/2 w-full">
                     <div className="flex flex-col gap-5">
-                        <h3 className="font-semibold font-nyght text-xl">Cafes you like</h3>
+                        <h3 className="font-semibold font-nyght text-xl">Cafes that {profile?.name} likes</h3>
 
                         <div className="grid grid-cols-2 gap-5">
                             {likes &&
@@ -129,7 +217,7 @@ export default function User({ params }) {
 
                 <div className="p-5 mt-20 lg:w-1/2 w-auto">
                     <div className="flex flex-col gap-5">
-                        <h3 className="font-semibold font-nyght text-xl">Your reviews</h3>
+                        <h3 className="font-semibold font-nyght text-xl">{profile?.name}'s reviews</h3>
 
                         <div className="flex flex-wrap gap-5">
                             {reviews &&

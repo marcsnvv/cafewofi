@@ -1,12 +1,12 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@/utils/supabase/client"
 
 import Link from "next/link"
 
 export default function UserAutocomplete({ username }) {
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
     const inputRef = useRef()
     const [showAutocomplete, setShowAutocomplete] = useState(false)
     const [results, setResults] = useState([])

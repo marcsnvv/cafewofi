@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
-
+import { createClient } from "@/utils/supabase/client"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -20,7 +19,7 @@ import { Star, Location, Verified, Clock, Flame, Dollar, Phone, Tag, PaperPlane 
 import { WriteReviewAction } from "@/app/actions/write-review"
 
 export default function Cafe({ params }) {
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
     const { pending } = useFormStatus()
 
     const [avatar, setAvatar] = useState()
@@ -35,6 +34,7 @@ export default function Cafe({ params }) {
     const [reviewStars, setReviewStars] = useState(0)
 
     const [loading, setLoading] = useState(true)
+    const [imageError, setImageError] = useState(false) // Estado para manejar el error de la imagen
 
     useEffect(() => {
         console.log(pending)
@@ -87,17 +87,14 @@ export default function Cafe({ params }) {
         setFormError(null)
     }
 
-    // function clearForm(event) {
-    //     event.preventDefault()
-    //     setReviewStars(0)
-    //     document.getElementById("content").value = ""
-    //     // window.location("/cafe/" + data.cafe_id)
-    // }
+    function handleImageError() {
+        setImageError(true); // Maneja el error de la imagen
+    }
 
     return (
         <main>
             <Topbar
-                avatar={avatar}
+                avatar_url={avatar}
                 name={name}
             />
             {!loading && <section className="p-5 pt-28 flex lg:flex-row flex-col gap-5">
@@ -130,11 +127,12 @@ export default function Cafe({ params }) {
                         </div>
                     </div>
                     <Image
-                        src={data?.main_image_url}
+                        src={imageError ? "/fallback-image.png" : data.main_image_url}
                         width={1080}
                         height={1080}
                         className="rounded-lg"
-                        alt={data?.name}
+                        alt={data.name}
+                        onError={handleImageError} // Maneja el error de carga de la imagen
                     />
                 </div>
                 <div className="flex flex-col gap-5 lg:w-1/3">
@@ -211,7 +209,6 @@ export default function Cafe({ params }) {
                                 onChange={(e) => validateForm(e)}
                                 name="content"
                                 id="content"
-                                // onResize={ }
                                 minLength={1}
                                 maxLength={350}
                                 rows={3}
@@ -230,7 +227,6 @@ export default function Cafe({ params }) {
                                     variant="primary-rounded"
                                     type="submit"
                                     disabled={formError != null && true}
-                                // onClick={(e) => clearForm(e)}
                                 >
                                     <PaperPlane size="20" color="white" />
                                 </Button>

@@ -1,20 +1,18 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
-
+import { createClient } from "@/utils/supabase/server"
 import HomePage from "@/modules/home"
 
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createClient()
   const { data: { session } } = await supabase.auth.getSession()
   const { data: user, error } = await supabase
     .from("users")
     .select("*")
     .eq("id", session?.user?.id)
 
-  const name = user?.[0]?.name
-  const avatar = user?.[0]?.avatar_url
+  const name = user?.[0].name
+  const avatar_url = user?.[0].avatar_url
 
   return (
-    <HomePage name={name} avatar={avatar} />
+    <HomePage name={name} avatar_url={avatar_url} />
   )
 }

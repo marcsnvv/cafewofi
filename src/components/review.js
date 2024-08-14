@@ -1,6 +1,6 @@
 "use client"
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@/utils/supabase/client"
 import { useEffect, useState } from "react"
 
 import Link from "next/link"
@@ -9,7 +9,7 @@ import Label from "./label"
 import ETS from "@/utils/elapsed"
 
 export default function Review({ data, avatar, name, username }) {
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
     const [un, setUn] = useState(username)
     const [nm, setNm] = useState(name)
     const [av, setAv] = useState(avatar)

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@/utils/supabase/client"
 import Image from "next/image"
 import Topbar from "@/components/topbar"
 import Field from "@/components/field"
@@ -9,7 +9,7 @@ import Button from "@/components/button"
 import { FileAdd } from "@/modules/icons"
 
 export default function Settings() {
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
     const [name, setName] = useState("")
     const [username, setUsername] = useState("")
     const [avatar, setAvatar] = useState("")
@@ -29,22 +29,17 @@ export default function Settings() {
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
-            if (!session) {
-                window.location.href = "/"
-                return
-            } else {
-                setSid(session.user.id)
-            }
-
+            setSid(session.user.id)
 
             const { data, error } = await supabase
                 .from("users")
                 .select("*")
                 .eq("id", session.user.id)
 
-            if (error) {
-                console.error('Error fetching data:', error)
-                return
+            if (error || !data?.user) {
+                window.href = "/"
+            } else {
+                setSid(session.user.id)
             }
 
             setName(data[0]?.name || "")
@@ -187,7 +182,7 @@ export default function Settings() {
 
     return (
         <main>
-            <Topbar loading={loading} avatar={avatar} name={name} noSearch />
+            <Topbar loading={loading} avatar_url={avatar} name={name} noSearch />
 
             <section className="p-5 pt-28 lg:flex items-center justify-center">
                 <form className="grid gap-4 w-full mt-5 lg:max-w-lg">

@@ -1,12 +1,12 @@
 'use client'
 
+import { createClient } from "@/utils/supabase/client"
 import { useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { FileAdd } from "@/modules/icons"
 
 export default function Thumbnail({ thumbnail_url, userId, onlyView = false }) {
     const [isHovered, setIsHovered] = useState(false)
-    const supabase = createClientComponentClient()
+    const supabase = createClient()
 
     const handleUpload = async (event) => {
         const file = event.target.files[0]

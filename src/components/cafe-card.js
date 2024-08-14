@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Heart, Star, Location } from "../modules/icons"
 import { LikeAction } from "@/app/actions/like"
-
 import Link from "next/link"
 
 // Función para parsear el precio
@@ -57,6 +56,7 @@ function LargePlaceholder() {
 export default function CoffeeCard({ size, data, props }) {
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [imgError, setImgError] = useState(false) // Estado para manejar errores de imagen
 
     useEffect(() => {
         // Verifica si data.cafe_id está en props.likes
@@ -67,6 +67,10 @@ export default function CoffeeCard({ size, data, props }) {
         }
         setLoading(false)
     }, [data.cafe_id, props.likes])
+
+    const handleImageError = () => {
+        setImgError(true); // Maneja el error de la imagen
+    }
 
     if (loading) {
         if (size === "xs") {
@@ -80,17 +84,11 @@ export default function CoffeeCard({ size, data, props }) {
         return (
             <Link href={`/cafe/${data.cafe_id}`} className="relative flex">
                 <img
-                    src={data.main_image_url}
+                    src={imgError ? "/fallback-image.png" : data.main_image_url} // Usa una imagen de fallback si ocurre un error
+                    onError={handleImageError} // Maneja el error de carga
                     className="rounded-lg hover:shadow-xl cursor-pointer w-full"
                     alt={data.name}
                 />
-                {/* <BlurImage
-                    width={250}
-                    height={250}
-                    url={data.main_image_url}
-                    alt={data.name}
-                    className=""
-                /> */}
                 <form className="z-10 absolute" action={LikeAction}>
                     <input name="postId" className="hidden" value={data.cafe_id}></input>
                     <button
@@ -128,7 +126,8 @@ export default function CoffeeCard({ size, data, props }) {
                 ${props.structure === 1 ? "p-2 items-center justify-center" : "p-5"}`}
             >
                 <img
-                    src={data.main_image_url}
+                    src={imgError ? "/fallback-image.png" : data.main_image_url} // Usa una imagen de fallback si ocurre un error
+                    onError={handleImageError} // Maneja el error de carga
                     className="rounded-xl lg:w-[200px]"
                     alt={data.name}
                 />

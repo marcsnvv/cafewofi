@@ -37,7 +37,7 @@ const workplaces = [
     "Sofía"
 ]
 
-export default function HomePage({ name, avatar }) {
+export default function HomePage({ name, avatar_url }) {
     const router = useRouter()
     const [query, setQuery] = useState("")
     const [loading, setLoading] = useState(false)
@@ -46,7 +46,7 @@ export default function HomePage({ name, avatar }) {
     function searchCW(e) {
         e.preventDefault()
         setLoading(true)
-        if (!avatar && !name) {
+        if (!avatar_url && !name) {
             setShowModal(true)
         } else {
             if (query === undefined || query.trim() === "") {
@@ -79,7 +79,7 @@ export default function HomePage({ name, avatar }) {
                 <Link href={"/"}>
                     <Image src={"/cwf.png"} width={50} height={50} />
                 </Link>
-                <UserCard avatar={avatar} />
+                <UserCard avatar_url={avatar_url} />
             </nav>
 
             <div className="h-screen w-full flex flex-col items-center justify-center gap-10">

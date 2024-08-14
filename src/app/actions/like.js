@@ -1,10 +1,9 @@
 "use server"
 
-import { createServerActionClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
+import { createClient } from "@/utils/supabase/client"
 
 export async function LikeAction(postId) {
-    const supabase = createServerActionClient({ cookies })
+    const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
 
     try {

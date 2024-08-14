@@ -1,18 +1,17 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
+import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
 import Finder from "@/modules/finder"
 
 export default async function Search({ params }) {
-    const supabase = createServerComponentClient({ cookies })
-    const { data: { session } } = await supabase.auth.getSession()
+    const supabase = createClient()
+    const { data: { session }, error } = await supabase.auth.getSession()
 
-    if (!session) {
-        redirect("/")
+    if (error || !session.user) {
+        redirect('/')
     }
 
-    let { data: user } = await supabase
+    let { data: user, } = await supabase
         .from("users")
         .select("avatar_url, name")
         .eq("id", session.user.id)
@@ -22,12 +21,14 @@ export default async function Search({ params }) {
         .select("cafe_id")
         .eq("user_id", session.user.id)
 
-    let { data: cafes, error } = await supabase
+    let { data: cafes } = await supabase
         .from('cafes')
         .select('*')
 
+
+
     const name = user[0]?.name
-    const avatar = user[0]?.avatar_url
+    const avatar_url = user[0]?.avatar_url
 
 
     return (
@@ -36,7 +37,7 @@ export default async function Search({ params }) {
                 params={params}
                 cafes={cafes}
                 props={{
-                    avatar,
+                    avatar_url,
                     name,
                     likes
                 }}

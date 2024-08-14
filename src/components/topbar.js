@@ -10,7 +10,7 @@ import Loading from "./loading"
 import UserCard from "./user-card"
 import UserAutocomplete from "./user-autocomplete"
 
-export default function Topbar({ avatar, ...props }) {
+export default function Topbar({ avatar_url, ...props }) {
     const router = useRouter()
     const [query, setQuery] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -63,7 +63,7 @@ export default function Topbar({ avatar, ...props }) {
                     }
                 </div>
 
-                <UserCard avatar={avatar} />
+                <UserCard avatar_url={avatar_url} />
             </div>
         </nav>
     )

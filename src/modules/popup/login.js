@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SignUpWithEmail from "./login/login-email"
 import SignInWithOAuth from "./login/login-oauth"
 import { Close } from "@/modules/icons"

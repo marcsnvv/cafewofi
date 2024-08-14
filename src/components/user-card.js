@@ -9,16 +9,15 @@ import Popup from "./popup"
 import { User } from "@/modules/icons"
 import Label from "./label"
 
-export default function UserCard({ avatar }) {
-
+export default function UserCard({ avatar_url }) {
     return (
         <>
-            {avatar ? (
+            {avatar_url ? (
                 <Modal
                     variant="user"
                     trigger={
                         <Image
-                            src={avatar}
+                            src={avatar_url}
                             alt="user avatar"
                             width={50}
                             height={50}
@@ -31,7 +30,8 @@ export default function UserCard({ avatar }) {
                         <Label variant="info rounded">
                             <User className="w-[50px] h-[50px]" />
                         </Label>
-                    } />
+                    }
+                />
             )}
         </>
     )

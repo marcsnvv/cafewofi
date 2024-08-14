@@ -1,48 +1,59 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
+import { createClient } from "@/utils/supabase/server"
+import { redirect } from 'next/navigation'
 
 import Image from "next/image"
 import Topbar from "@/components/topbar"
-
 import CoffeeCard from "@/components/cafe-card"
 import Review from "@/components/review"
-
-import ETS from "@/utils/elapsed"
 import ThumbnailUploader from "@/components/thumbnail"
-
-// BADGES
+import Tooltip from "@/components/tooltip"
 import { Verified, CoffeeMaker, WorkCafe } from "@/modules/badges"
 import { At } from "@/modules/icons"
-import Tooltip from "@/components/tooltip"
+import ETS from "@/utils/elapsed"
 
 export default async function Account() {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     const avatar = session?.user?.user_metadata?.avatar_url
     const name = session?.user?.user_metadata?.full_name
 
-    const { data, error } = await supabase
+    // Obtener datos del usuario
+    const { data: userData, error: userError } = await supabase
         .from('users')
         .select(`
             *,
             reviews(*),
             likes(cafe_id, cafes(*))
         `)
-        .eq('id', session.user.id)
+        .eq('id', session?.user?.id)
+        .single();
 
-    if (error) {
-        console.error('Error fetching data:', error)
-        return
+    if (userError || !userData) {
+        redirect('/')
     }
 
-    const profile = data[0]
-    const reviews = data[0]?.reviews
-    const likes = data[0]?.likes.map(like => like.cafes)
+    // Obtener amigos del usuario
+    const { data: friendsData, error: friendsError } = await supabase
+        .from('friends')
+        .select(`
+            *,
+            friend:users(username, avatar_url, name)
+        `)
+        .eq('user_id', session?.user?.id);
+
+    if (friendsError) {
+        console.error('Error fetching friends:', friendsError)
+    }
+
+    const profile = userData
+    const reviews = profile?.reviews
+    const likes = profile?.likes.map(like => like.cafes)
+    const friends = friendsData?.map(friend => friend.friend) // Mapear los amigos a la estructura correcta
 
     return (
         <main>
             <Topbar
-                avatar={profile.avatar_url}
+                avatar_url={profile.avatar_url}
                 name={name}
                 noSearch
                 uAuto
@@ -130,6 +141,28 @@ export default async function Account() {
                                         />
                                     ))}
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sección de amigos */}
+            <section className="p-5 lg:w-full w-auto">
+                <div className="flex flex-col gap-5">
+                    <h3 className="font-semibold font-nyght text-xl">Your Friends</h3>
+                    <div className="grid grid-cols-2 gap-5">
+                        {friends && friends.length > 0 ? (
+                            friends.map((friend, index) => (
+                                <div key={index} className="flex items-center gap-3 p-3 bg-lightgray rounded-lg">
+                                    <Image src={friend.avatar_url || '/default-avatar.png'} width={50} height={50} className="rounded-full" alt={friend.name} />
+                                    <div>
+                                        <h4 className="font-semibold">{friend.name}</h4>
+                                        <span className="text-gray">@{friend.username}</span>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray">No friends found.</p>
+                        )}
                     </div>
                 </div>
             </section>

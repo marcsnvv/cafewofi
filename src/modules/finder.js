@@ -16,7 +16,7 @@ export default function Finder({ props, params, cafes }) {
 
     return (
         <main className="w-full z-10">
-            <Topbar avatar={props.avatar} name={props.name} setPlace={setPlace} place={place} />
+            <Topbar avatar_url={props.avatar_url} name={props.name} setPlace={setPlace} place={place} />
             <section className="grid lg:flex gap-10 justify-between">
                 <Filters
                     cafes={cafes}
