@@ -29,7 +29,6 @@ export default function Settings() {
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
-            setSid(session.user.id)
 
             const { data, error } = await supabase
                 .from("users")

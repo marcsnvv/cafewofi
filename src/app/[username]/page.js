@@ -9,6 +9,7 @@ import Review from "@/components/review"
 import ETS from "@/utils/elapsed"
 import Thumbnail from "@/components/thumbnail"
 import Tooltip from "@/components/tooltip"
+import Button from "@/components/button"
 import { Verified, WorkCafe, CoffeeMaker } from "@/modules/badges"
 import { At } from "@/modules/icons"
 import addFriend from "@/app/actions/add-friend"
@@ -183,13 +184,15 @@ export default function User({ params }) {
                 </div>
             </section>
 
-            <section className="flex flex-col items-center mt-4">
+            <section className="flex flex-col items-center mt-4 p-5">
                 {isFriend ? (
-                    <button className="btn btn-disabled">Already Friends</button>
+                    <Button disabled variant="secondary" className="w-full">
+                        Already Friends
+                    </Button>
                 ) : friendStatus === 'pending' ? (
-                    <button className="btn btn-disabled">Friend Request Sent</button>
+                    <Button disabled className="bg-lightbrand text-brand w-full">Friend Request Sent</Button>
                 ) : (
-                    <button onClick={handleAddFriend} className="btn btn-primary">Add Friend</button>
+                    <Button onClick={handleAddFriend} className="w-full">Add Friend</Button>
                 )}
             </section>
 

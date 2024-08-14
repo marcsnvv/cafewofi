@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client"
 import { useEffect, useState } from "react"
 import Topbar from "@/components/topbar"
 import Button from "@/components/button"
+import ETS from "@/utils/elapsed"
 
 export default function Notifications() {
     const supabase = createClient()
@@ -14,7 +15,14 @@ export default function Notifications() {
     useEffect(() => {
         async function fetchNotifications() {
             const { data: { session } } = await supabase.auth.getSession()
-            setAvatar(session?.user?.user_metadata?.avatar_url)
+            if (!session?.user?.id) {
+                window.location.href = "/"
+            }
+            const { data: profile } = await supabase
+                .from('users')
+                .select('avatar_url')
+                .eq('id', session.user.id)
+            setAvatar(profile[0].avatar_url)
 
             // Obtener notificaciones del usuario
             const { data, error } = await supabase
@@ -29,6 +37,7 @@ export default function Notifications() {
                     users:sender_id (username, avatar_url)
                 `)
                 .eq('recipient_id', session.user.id)
+                .eq('status', 'pending')
 
             if (error) {
                 console.error("Error fetching notifications:", error)
@@ -62,9 +71,18 @@ export default function Notifications() {
         }
     }
 
+
+
     const handleFollowRequest = async (notificationId, action, senderId, recipientId) => {
         try {
+            console.log(action)
             const supabase = createClient()
+            const { data: { session } } = await supabase.auth.getSession()
+
+            const currentUserId = session.user.id
+
+            // Establecer el parámetro de configuración
+            await supabase.rpc('set_current_user_id', { user_id: currentUserId })
 
             // Actualizar el estado de la notificación
             const { error: notificationError } = await supabase
@@ -73,21 +91,20 @@ export default function Notifications() {
                 .eq('id', notificationId)
 
             if (notificationError) {
-                console.error(`Error ${action} follow request:`, notificationError)
+                console.error(`Error ${action} follow request:`, notificationError);
                 return
             }
 
-            // Si la solicitud es aceptada, agrega una nueva entrada en la tabla 'friends'
+            // Si la solicitud es aceptada, actualiza el estado en la tabla 'friends'
             if (action === 'accepted') {
-                const { error: friendsError } = await supabase
+                const { error: updateFriendsError } = await supabase
                     .from('friends')
-                    .insert([
-                        { user_id: recipientId, friend_id: senderId },
-                        { user_id: senderId, friend_id: recipientId }
-                    ])
+                    .update({ status: 'accepted' }) // Asegúrate de que el nombre de la columna sea 'status'
+                    .eq('user_id', senderId)
+                    .eq('friend_id', recipientId)
 
-                if (friendsError) {
-                    console.error('Error adding friend:', friendsError)
+                if (updateFriendsError) {
+                    console.error('Error updating friend relationship:', updateFriendsError)
                     return
                 }
             }
@@ -95,11 +112,11 @@ export default function Notifications() {
             // Si la solicitud es declinada, no es necesario realizar ninguna acción adicional en la tabla 'friends'
 
             // Actualiza el estado de las notificaciones en el frontend
-            setNotifications(notifications.filter(notif => notif.id !== notificationId))
+            setNotifications(notifications.filter(notif => notif.id !== notificationId));
         } catch (error) {
-            console.error(`Error handling follow request:`, error)
+            console.error(`Error handling follow request:`, error);
         }
-    }
+    };
 
 
     if (loading) return <div>Loading...</div>
@@ -115,20 +132,20 @@ export default function Notifications() {
                     ) : (
                         <ul>
                             {notifications.map(notification => (
-                                <li key={notification.id} className="p-3 border-b border-gray-200">
+                                <li key={notification.id} className="p-3 border-b border-lightbrand">
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center text-xs">
                                             <img src={notification.users?.avatar_url || '/default-avatar.png'} alt="Avatar" className="w-10 h-10 rounded-full" />
                                             <div className="ml-3">
                                                 <p><strong>{notification.users?.username}</strong> sent you a {notification.type}</p>
-                                                <p className="text-sm text-gray-500">{new Date(notification.created_at).toLocaleString()}</p>
+                                                <p className="text-xs text-gray">{ETS(notification.created_at)}</p>
                                             </div>
                                         </div>
                                         <div>
                                             {notification.type === 'friend_request' && (
                                                 <div className="flex space-x-2">
-                                                    <Button onClick={() => handleFollowRequest(notification.id, 'accepted')}>Accept</Button>
-                                                    <Button onClick={() => handleFollowRequest(notification.id, 'declined')}>Decline</Button>
+                                                    <Button className={"text-xs"} onClick={() => handleFollowRequest(notification.id, 'accepted', notification.sender_id, notification.recipient_id)}>Accept</Button>
+                                                    <Button className={"bg-secondary text-xs"} onClick={() => handleFollowRequest(notification.id, 'declined', notification.sender_id, notification.recipient_id)}>Decline</Button>
                                                 </div>
                                             )}
                                             {notification.status === 'unread' && (

@@ -35,7 +35,7 @@ export default function Topbar({ avatar_url, ...props }) {
 
     return (
         <nav className="z-50 fixed bg-white w-full p-4 lg:px-8 shadow-sm flex items-center justify-between">
-            <div className="flex justify-between w-full">
+            <div className="flex justify-between w-full gap-4">
                 <div className="flex justify-between lg:gap-8 gap-4 w-auto">
                     <Link href="/" className="flex gap-2 items-center">
                         <Image src="/cwf.png" width={50} height={50} alt="CWF Logo" />
