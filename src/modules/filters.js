@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { Card, Wifi, Time, Slider, List, Table, UserVoice, Volume, Views, Calendar, Filter, Leaf } from "@/modules/icons"
 import CoffeeCard from "../components/cafe-card"
+import LoadingPage from "./loading-page"
 
 import { pois } from "@/utils/pois"
 
@@ -126,10 +127,7 @@ const Filters = ({ props, setPlaceData, cafes }) => {
 
     return (
         loading ? (
-            <section className="h-full w-full items-center justify-center">
-                {/* <Loader /> */}
-                <h1>Loading...</h1>
-            </section>
+            <LoadingPage />
         ) : (
             <section className="z-0 w-screen">
                 <div className="z-40 flex flex-col gap-5 p-5 mt-20 bg-white w-screen lg:w-[50vw] 2xl:w-[40vw]">

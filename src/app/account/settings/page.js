@@ -29,18 +29,16 @@ export default function Settings() {
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
+            setSid(session.user.id)
 
             const { data, error } = await supabase
                 .from("users")
                 .select("*")
                 .eq("id", session.user.id)
 
-            if (error || !data?.user) {
+            if (error || !data.user) {
                 window.href = "/"
-            } else {
-                setSid(session.user.id)
             }
-
             setName(data[0]?.name || "")
             setAvatar(data[0]?.avatar_url || "")
             setUsername(data[0]?.username || "")

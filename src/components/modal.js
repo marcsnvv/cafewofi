@@ -27,7 +27,7 @@ export default function Modal({ trigger, variant }) {
                 {trigger}
             </button>
             {modal && (
-                <div className="absolute mt-4 right-0 w-[255px]">
+                <div className="absolute mt-4 right-0 w-[255px] z-50">
                     <UserModal />
                 </div>
             )}
