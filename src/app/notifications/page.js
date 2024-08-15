@@ -126,15 +126,15 @@ export default function Notifications() {
             {loading ? (
                 <LoadingPage />
             ) : (
-                <section className="p-5">
+                <section className="">
                     <h2 className="text-2xl font-semibold">Notifications</h2>
-                    <div className="mt-12">
+                    <div className="mt-14">
                         {notifications.length === 0 ? (
                             <p>No notifications</p>
                         ) : (
                             <ul>
                                 {notifications.map(notification => (
-                                    <li key={notification.id} className="p-3 border-b border-lightbrand">
+                                    <li key={notification.id} className="px-5 py-1 border-b border-lightbrand">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center text-xs">
                                                 <img src={notification.users?.avatar_url || '/default-avatar.png'} alt="Avatar" className="w-10 h-10 rounded-full" />

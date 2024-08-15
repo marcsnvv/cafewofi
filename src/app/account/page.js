@@ -17,7 +17,6 @@ import Loading from "@/components/loading"
 import Link from "next/link"
 import LoadingPage from "@/modules/loading-page"
 
-
 export default function Account() {
     const [profile, setProfile] = useState(null)
     const [likes, setLikes] = useState([])
@@ -56,27 +55,44 @@ export default function Account() {
                     return
                 }
 
-                const userId = session.user.id
+                const userId = session.user.id;
 
                 // Obtener amigos del usuario
                 const { data: friendsData, error: friendsError } = await supabase
                     .from('friends')
                     .select(`
-    *,
-    friend:users!friends_user_id_fkey(username, avatar_url, name)
-`)
+                        *,
+                        user:users!friends_user_id_fkey(id, username, avatar_url, name),
+                        friend:users!friends_friend_id_fkey(id, username, avatar_url, name)
+                    `)
                     .or(`user_id.eq.${userId},friend_id.eq.${userId}`) // Usar el ID del usuario desde la sesión en ambas columnas
                     .eq('status', 'accepted') // Filtrar por estado "accepted"
+                    .order('created_at', { ascending: false });
 
                 if (friendsError) {
                     throw new Error(`Error fetching friends: ${friendsError.message}`)
                 }
 
+                // Filtrar la información del amigo dependiendo del userId
+                const filteredFriendsData = friendsData.map(friendship => {
+                    if (friendship.user_id === userId) {
+                        return {
+                            ...friendship.friend, // Información del amigo
+                            friend_id: friendship.friend_id,
+                        };
+                    } else {
+                        return {
+                            ...friendship.user, // Información del amigo
+                            friend_id: friendship.user_id,
+                        };
+                    }
+                });
+
                 // Actualizar estado
                 setProfile(userData)
                 setReviews(userData.reviews)
                 setLikes(userData.likes.map(like => like.cafes))
-                setFriends(friendsData.map(friend => friend.friend))
+                setFriends(filteredFriendsData)
                 setIsLoading(false)
             } catch (error) {
                 console.error('Error fetching data:', error)
@@ -212,19 +228,27 @@ export default function Account() {
 
                     {
                         activeSection === 'friends' && (
-                            <div className="grid grid-cols-2 gap-5 p-5">
+                            <div className="grid gap-5 px-5 py-1 border-b border-lightbrand">
                                 {friends.length > 0 ? (
-                                    friends.map((friend, index) => (
-                                        <Link key={index} href={`/${friend.username}`}>
-                                            <div className="flex items-center gap-3 p-3 bg-lightgray rounded-lg">
-                                                <Image src={friend.avatar_url || '/default-avatar.png'} width={50} height={50} className="rounded-full" alt={friend.name} />
-                                                <div>
-                                                    <h4 className="font-semibold">{friend.name}</h4>
-                                                    <span className="text-gray">@{friend.username}</span>
+                                    friends.map((friend, index) => {
+                                        // Función para truncar el texto si supera los 15 caracteres
+                                        const truncateText = (text) => {
+                                            return text.length > 15 ? text.substring(0, 9) + '...' : text;
+                                        }
+
+                                        return (
+                                            <Link key={index} href={`/${friend.username}`}>
+                                                <div className="flex items-center gap-3">
+                                                    <Image src={friend.avatar_url || '/default-avatar.png'} width={50} height={50} className="rounded-full" alt={friend.name} />
+                                                    <div>
+                                                        {/* Aplicar la función de truncar a name y username */}
+                                                        <h4 className="font-semibold">{truncateText(friend.name)}</h4>
+                                                        <span className="text-gray">@{truncateText(friend.username)}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    ))
+                                            </Link>
+                                        );
+                                    })
                                 ) : (
                                     <p className="text-gray">No friends found.</p>
                                 )}
