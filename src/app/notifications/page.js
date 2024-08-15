@@ -134,8 +134,8 @@ export default function Notifications() {
                         ) : (
                             <ul>
                                 {notifications.map(notification => (
-                                    <li key={notification.id} className="px-5 py-1 border-b border-lightbrand">
-                                        <div className="flex items-center justify-between">
+                                    <li key={notification.id} className="px-5 py-3 border-b border-lightbrand">
+                                        <div className="flex items-center justify-between gap-1">
                                             <div className="flex items-center text-xs">
                                                 <img src={notification.users?.avatar_url || '/default-avatar.png'} alt="Avatar" className="w-10 h-10 rounded-full" />
                                                 <div className="ml-3">
