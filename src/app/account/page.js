@@ -183,7 +183,7 @@ export default function Account() {
                     {/* Content Sections */}
                     {
                         activeSection === 'likes' && (
-                            <div className="grid grid-cols-2 gap-5 p-5">
+                            <div className="grid lg:grid-cols-6 grid-cols-2 gap-5 p-5">
                                 {likes.length > 0 ? (
                                     likes
                                         .slice()
