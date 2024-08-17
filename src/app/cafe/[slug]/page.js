@@ -18,7 +18,8 @@ import { useFormStatus } from 'react-dom'
 // ICONS
 import { Star, Location, Verified, Clock, Flame, Dollar, Phone, Tag, Heart, Share } from "@/modules/icons"
 // ACTIONS
-import { LikeAction, DislikeAction } from "@/app/actions/like"
+import { LikeAction } from "@/app/actions/like"
+import { DislikeAction } from "@/app/actions/dislike"
 import LoadingPage from "@/modules/loading-page"
 
 export default function Cafe({ params }) {
@@ -78,10 +79,10 @@ export default function Cafe({ params }) {
 
             if (liked) {
                 await DislikeAction(formData);
-                setLiked(false);
+                setLiked(false)
             } else {
                 await LikeAction(formData);
-                setLiked(true);
+                setLiked(true)
             }
         } catch (error) {
             console.error('Error toggling like/dislike:', error);
@@ -122,12 +123,16 @@ export default function Cafe({ params }) {
                                     >
                                         <Share />
                                     </Button>
-                                    <Button
-                                        className={`rounded-full hover:bg-white p-2 m-2 bg-lightgray`}
-                                        onClick={handleLike}
-                                    >
-                                        <Heart color={liked ? "red" : "#6B6F7B"} />
-                                    </Button>
+                                    <form className="" action={DislikeAction}>
+                                        <input name="postId" className="hidden" value={data.cafe_id}></input>
+                                        <button
+                                            type="submit"
+                                            className={`rounded-full hover:bg-white p-2 m-2 bg-lightgray`}
+                                            onClick={() => setLiked(!liked)}
+                                        >
+                                            <Heart color={liked ? "red" : "#6B6F7B"} />
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">

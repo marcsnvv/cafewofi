@@ -1,10 +1,14 @@
 "use server"
 
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/server"
 
 export async function LikeAction(postId) {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+        console.log("There is no session to like this cafe :/")
+        return
+    }
 
     try {
         // Intenta insertar un nuevo like en la tabla 'Likes'
