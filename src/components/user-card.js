@@ -8,6 +8,7 @@ import Modal from "./modal"
 import Popup from "./popup"
 import { User } from "@/modules/icons"
 import Label from "./label"
+import Login from "@/modules/popup/login"
 
 export default function UserCard({ avatar_url }) {
     return (
@@ -30,6 +31,9 @@ export default function UserCard({ avatar_url }) {
                         <Label variant="info rounded">
                             <User className="w-[50px] h-[50px]" />
                         </Label>
+                    }
+                    content={
+                        <Login />
                     }
                 />
             )}

@@ -8,7 +8,8 @@ export default function Button({
     variant = "primary",
     onClick,
     loading = false,
-    disabled
+    disabled,
+    type
 }) {
     // const [isHovered, setIsHovered] = useState(false)
 
@@ -23,6 +24,7 @@ export default function Button({
         `}
             onClick={onClick ? (e) => onClick(e) : null}
             disabled={loading || disabled}
+            type={type}
         >
             {loading ? <Loading color="brand" /> : children}
         </button>

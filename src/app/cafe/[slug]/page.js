@@ -12,6 +12,7 @@ import Button from "@/components/button"
 import ReviewsForm from "@/components/reviews-form"
 import Gallery from "@/components/gallery"
 import ScrollGallery from "@/components/scroll-gallery"
+import ReserveButton from "@/components/reserve-button"
 
 import { isOpen } from "@/utils/is-open"
 import { isBusyToday } from "@/utils/is-busy"
@@ -46,7 +47,6 @@ export default function Cafe({ params }) {
     }, [pending])
 
     useEffect(() => {
-        console.log(params.slug)
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
             const { data, error } = await supabase
@@ -123,6 +123,7 @@ export default function Cafe({ params }) {
                                             <Heart color={liked ? "red" : "#6B6F7B"} />
                                         </button>
                                     </form>
+                                    <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">
@@ -144,15 +145,6 @@ export default function Cafe({ params }) {
                                     </Link>
                                 </div>
                             </div>
-                            {/* <Image
-                                src={imageError ? "/fallback-image.png" : data?.photos?.[0]}
-                                width={1080}
-                                height={1080}
-                                className="rounded-lg"
-                                alt={data.name}
-                                onError={() => setImageError(true)}
-                            /> */}
-                            {/* <Gallery photos={data?.photos} limit={4} cols={2} rows={2} /> */}
                             <ScrollGallery photos={data?.photos} />
                         </div>
                         <div className="flex flex-col gap-5 lg:w-1/3">

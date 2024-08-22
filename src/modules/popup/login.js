@@ -1,23 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import SignUpWithEmail from "./login/login-email"
 import SignInWithOAuth from "./login/login-oauth"
-import { Close } from "@/modules/icons"
 
-export default function Login({
-    setModal,
-}) {
+export default function Login() {
     const [withEmail, setWithEmail] = useState(false)
 
     return (
-        <div className="relative bg-white p-2 rounded-lg flex flex-col gap-4">
-            <button
-                className="absolute z-50 top-4 right-4 p-2 rounded-full hover:bg-gray/25"
-                onClick={() => setModal(false)}
-            >
-                <Close />
-            </button>
+        <>
             {withEmail ? (
                 <SignUpWithEmail
                     changeToLogin={() => setWithEmail(false)}
@@ -27,6 +18,6 @@ export default function Login({
                     changeToSignInWithEmail={() => setWithEmail(true)}
                 />
             )}
-        </div>
+        </>
     )
 }
