@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import DatePicker from 'react-datepicker'  // Biblioteca de calendario
-import 'react-datepicker/dist/react-datepicker.css' // Estilos del calendario
+import DatePicker from 'react-datepicker'
+import "./../../node_modules/react-datepicker/dist/react-datepicker.css"
 
 const Calendar = ({ onDateSelect }) => {
     const [startDate, setStartDate] = useState(null)

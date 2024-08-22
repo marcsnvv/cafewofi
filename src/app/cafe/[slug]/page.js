@@ -38,7 +38,6 @@ export default function Cafe({ params }) {
     const [isBusy, setIsBusy] = useState()
 
     const [loading, setLoading] = useState(true)
-    const [imageError, setImageError] = useState(false)
 
     const [liked, setLiked] = useState(false)
 
@@ -102,11 +101,11 @@ export default function Cafe({ params }) {
                 loading ? (
                     <LoadingPage />
                 ) : (
-                    <section className="p-5 pt-28 flex lg:flex-row flex-col gap-5">
+                    <section className="p-5 py-28 flex lg:flex-row flex-col gap-5">
                         <div className="flex flex-col gap-5 lg:w-2/3">
                             <div className="flex items-center justify-between">
                                 <h1 className="text-5xl font-nyght">{data?.name}</h1>
-                                <div className="flex items-center gap-3">
+                                <div className="flex flex-col lg:flex-row items-center gap-3">
                                     <Button
                                         className={`rounded-full hover:bg-white p-2 m-2 bg-lightgray`}
                                         onClick={handleShare}
@@ -123,11 +122,13 @@ export default function Cafe({ params }) {
                                             <Heart color={liked ? "red" : "#6B6F7B"} />
                                         </button>
                                     </form>
-                                    <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
+                                    <div className="hidden lg:block">
+                                        <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-5">
+                                <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
                                     {data?.is_verified && <div className="flex items-center gap-2">
                                         <Verified />
                                         <span>Verified</span>
@@ -191,6 +192,16 @@ export default function Cafe({ params }) {
                                             data={review}
                                         />
                                     ))}
+                        </div>
+                    </section>
+                )
+            }
+            {
+                !loading && (
+                    <section className="lg:hidden fixed bottom-0 left-0 w-full bg-white text-black p-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-lg font-semibold">Reserve now!</span>
+                            <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
                         </div>
                     </section>
                 )

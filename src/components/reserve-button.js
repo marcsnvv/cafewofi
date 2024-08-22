@@ -104,12 +104,17 @@ const ReserveButton = ({ cafeName, cafeId, userId }) => {
 
     return (
         <>
-            <Button
-                onClick={(e) => handleShowCalendar(e)}
-            >
-                I'm going
-            </Button>
-            {showCalendar && <Calendar onDateSelect={handleDateSelect} />}
+
+            {showCalendar ?
+                <Calendar onDateSelect={handleDateSelect} /> :
+                (
+                    <Button
+                        className="px-10 font-bold text-lg lg:text-base"
+                        onClick={(e) => handleShowCalendar(e)}
+                    >
+                        I'm going
+                    </Button>
+                )}
             {showConfirmPopup &&
                 <Popup
                     opened={showConfirmPopup}
