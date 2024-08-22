@@ -10,3 +10,13 @@
   --darkgrey: #111111;
   /* #111111 */
 }
+
+/* Ocultar barra de desplazamiento en todos los navegadores */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

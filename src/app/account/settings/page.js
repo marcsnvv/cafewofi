@@ -182,7 +182,7 @@ export default function Settings() {
             <Topbar loading={loading} avatar_url={avatar} name={name} noSearch />
 
             <section className="p-5 pt-28 lg:flex items-center justify-center">
-                <form className="grid gap-4 w-full mt-5 lg:max-w-lg">
+                <form className="grid gap-4 w-full mt-5 lg:max-w-xl">
                     <label className="font-nyght text-2xl">Settings</label>
                     <div className="grid gap-2">
                         <label className={`${inputError.name ? "text-red-500" : "text-gray"}`}>

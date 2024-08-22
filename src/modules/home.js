@@ -34,7 +34,10 @@ const workplaces = [
     "Bangkok",
     "Lima",
     "Las Palmas",
-    "Sofía"
+    "Sofía",
+    "Lagos",
+    "Cairo",
+    "Kabul"
 ]
 
 export default function HomePage({ name, avatar_url }) {

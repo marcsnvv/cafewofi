@@ -14,6 +14,7 @@ import { Verified, WorkCafe, CoffeeMaker } from "@/modules/badges"
 import { At } from "@/modules/icons"
 import addFriend from "@/app/actions/add-friend"
 import LoadingPage from "@/modules/loading-page"
+import { redirect } from "next/navigation"
 
 export default function User({ params }) {
     const supabase = createClient()
@@ -28,7 +29,15 @@ export default function User({ params }) {
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
-            setAvatar(session?.user?.user_metadata?.avatar_url)
+            // setAvatar(session?.user?.user_metadata?.avatar_url)
+
+            if (!session) {
+                window.location.href = "/"
+            }
+
+            if (session.user.user_metadata.user_name === params.username) {
+                window.location.href = "/account"
+            }
 
             // Obtener datos del usuario
             const { data: userData, error: userError } = await supabase
@@ -51,6 +60,20 @@ export default function User({ params }) {
                 console.log(userError)
                 return
             }
+
+            // Obtener datos del usuario logueado utilizando session.user.id
+            const { data: loggedInUserData, error: loggedInUserError } = await supabase
+                .from('users')
+                .select('avatar_url')
+                .eq('id', session.user.id)
+                .single();
+
+            if (loggedInUserError) {
+                console.error("Error fetching logged-in user data:", loggedInUserError);
+                return;
+            }
+
+            setAvatar(loggedInUserData.avatar_url)
 
             // Obtener revisiones del usuario
             const { data: reviewsData, error: reviewsError } = await supabase
@@ -142,108 +165,110 @@ export default function User({ params }) {
             {loading ? (
                 <LoadingPage />
             ) : (
-                <>
-                    <section>
-                        <Thumbnail
-                            thumbnail_url={profile?.thumbnail}
-                            userId={profile?.id}
-                            onlyView
-                        />
-                        <div className="-mt-14 flex h-auto m-5 px-2 bg-lightgray rounded-lg items-center">
-                            <div>
-                                <Image src={profile?.avatar_url} width={120} height={120} className="rounded-lg" />
+                <main className="w-full flex items-center justify-center">
+                    <div className="lg:max-w-xl w-full">
+                        <section>
+                            <Thumbnail
+                                thumbnail_url={profile?.thumbnail}
+                                userId={profile?.id}
+                                onlyView
+                            />
+                            <div className="-mt-14 flex h-auto m-5 px-2 bg-lightgray rounded-lg items-center">
+                                <div>
+                                    <Image src={profile?.avatar_url} width={120} height={120} className="rounded-lg" />
+                                </div>
+                                <div className="p-5 flex flex-col justify-between items-start gap-1 w-full">
+                                    <div className="flex justify-between items-center w-full">
+                                        <h2 className="text-2xl font-roboto font-semibold">{profile?.name}</h2>
+                                        <div className="flex items-center gap-2">
+                                            {profile?.is_premium && (
+                                                <Tooltip text="Premium">
+                                                    <WorkCafe />
+                                                </Tooltip>
+                                            )}
+                                            {profile?.is_verified && (
+                                                <Tooltip text="Verified by CWF">
+                                                    <Verified />
+                                                </Tooltip>
+                                            )}
+                                            {profile?.is_coffeemaker && (
+                                                <Tooltip text="Coffee Maker">
+                                                    <CoffeeMaker />
+                                                </Tooltip>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <h2 className="text-lg text-gray font-roboto flex items-center justify-center gap-1">
+                                        <div className="mt-1">
+                                            <At />
+                                        </div>
+                                        {profile?.username}
+                                    </h2>
+                                    <span className="text-sm text-gray">
+                                        Member since {ETS(profile?.created_at)}
+                                    </span>
+                                </div>
                             </div>
-                            <div className="p-5 flex flex-col justify-between items-start gap-1 w-full">
-                                <div className="flex justify-between items-center w-full">
-                                    <h2 className="text-2xl font-roboto font-semibold">{profile?.name}</h2>
-                                    <div className="flex items-center gap-2">
-                                        {profile?.is_premium && (
-                                            <Tooltip text="Premium">
-                                                <WorkCafe />
-                                            </Tooltip>
-                                        )}
-                                        {profile?.is_verified && (
-                                            <Tooltip text="Verified by CWF">
-                                                <Verified />
-                                            </Tooltip>
-                                        )}
-                                        {profile?.is_coffeemaker && (
-                                            <Tooltip text="Coffee Maker">
-                                                <CoffeeMaker />
-                                            </Tooltip>
-                                        )}
+                        </section>
+
+                        <section className="flex flex-col items-center mt-4 p-5">
+                            {isFriend ? (
+                                <Button disabled variant="secondary" className="w-full">
+                                    Already Friends
+                                </Button>
+                            ) : friendStatus === 'pending' ? (
+                                <Button disabled className="bg-lightbrand text-brand w-full">Friend Request Sent</Button>
+                            ) : (
+                                <Button onClick={handleAddFriend} className="w-full">Add Friend</Button>
+                            )}
+                        </section>
+
+                        <section className="flex lg:flex-row flex-col justify-between">
+                            <div className="p-5 lg:w-1/2 w-full">
+                                <div className="flex flex-col gap-5">
+                                    <h3 className="font-semibold font-nyght text-xl">Cafes that {profile?.name} likes</h3>
+
+                                    <div className="grid grid-cols-2 gap-5">
+                                        {likes &&
+                                            likes
+                                                .slice() // Hacemos una copia para no modificar el array original
+                                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                                                .map((coffee, index) => (
+                                                    <CoffeeCard
+                                                        key={index}
+                                                        props={{ likes }}
+                                                        data={coffee}
+                                                        size="xs"
+                                                    />
+                                                ))}
                                     </div>
                                 </div>
-                                <h2 className="text-lg text-gray font-roboto flex items-center justify-center gap-1">
-                                    <div className="mt-1">
-                                        <At />
+                            </div>
+
+                            <div className="p-5 mt-20 lg:w-1/2 w-auto">
+                                <div className="flex flex-col gap-5">
+                                    <h3 className="font-semibold font-nyght text-xl">{profile?.name}'s reviews</h3>
+
+                                    <div className="flex flex-wrap gap-5">
+                                        {reviews &&
+                                            reviews
+                                                .slice() // Hacemos una copia para no modificar el array original
+                                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
+                                                .map((review, index) => (
+                                                    <Review
+                                                        key={index}
+                                                        data={review}
+                                                        avatar={profile?.avatar_url}
+                                                        name={profile?.name}
+                                                        username={profile?.username}
+                                                    />
+                                                ))}
                                     </div>
-                                    {profile?.username}
-                                </h2>
-                                <span className="text-sm text-gray">
-                                    Member since {ETS(profile?.created_at)}
-                                </span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="flex flex-col items-center mt-4 p-5">
-                        {isFriend ? (
-                            <Button disabled variant="secondary" className="w-full">
-                                Already Friends
-                            </Button>
-                        ) : friendStatus === 'pending' ? (
-                            <Button disabled className="bg-lightbrand text-brand w-full">Friend Request Sent</Button>
-                        ) : (
-                            <Button onClick={handleAddFriend} className="w-full">Add Friend</Button>
-                        )}
-                    </section>
-
-                    <section className="flex lg:flex-row flex-col justify-between">
-                        <div className="p-5 lg:w-1/2 w-full">
-                            <div className="flex flex-col gap-5">
-                                <h3 className="font-semibold font-nyght text-xl">Cafes that {profile?.name} likes</h3>
-
-                                <div className="grid grid-cols-2 gap-5">
-                                    {likes &&
-                                        likes
-                                            .slice() // Hacemos una copia para no modificar el array original
-                                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
-                                            .map((coffee, index) => (
-                                                <CoffeeCard
-                                                    key={index}
-                                                    props={{ likes }}
-                                                    data={coffee}
-                                                    size="xs"
-                                                />
-                                            ))}
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="p-5 mt-20 lg:w-1/2 w-auto">
-                            <div className="flex flex-col gap-5">
-                                <h3 className="font-semibold font-nyght text-xl">{profile?.name}'s reviews</h3>
-
-                                <div className="flex flex-wrap gap-5">
-                                    {reviews &&
-                                        reviews
-                                            .slice() // Hacemos una copia para no modificar el array original
-                                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
-                                            .map((review, index) => (
-                                                <Review
-                                                    key={index}
-                                                    data={review}
-                                                    avatar={profile?.avatar_url}
-                                                    name={profile?.name}
-                                                    username={profile?.username}
-                                                />
-                                            ))}
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </>
+                        </section>
+                    </div>
+                </main>
             )}
         </main>
     )

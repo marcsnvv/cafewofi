@@ -5,7 +5,12 @@ export function isBusyToday(dataString) {
 
     // Convertir el string de datos en un objeto para facilitar el acceso
     const data = {};
-    const parts = dataString.split(', ');
+    let parts
+    try {
+        parts = dataString.split(', ');
+    } catch {
+        return false
+    }
 
     // Recorrer cada parte del string para extraer y almacenar los datos
     parts.forEach(part => {

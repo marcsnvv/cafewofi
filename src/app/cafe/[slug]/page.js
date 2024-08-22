@@ -10,6 +10,8 @@ import Label from "@/components/label"
 import Review from "@/components/review"
 import Button from "@/components/button"
 import ReviewsForm from "@/components/reviews-form"
+import Gallery from "@/components/gallery"
+import ScrollGallery from "@/components/scroll-gallery"
 
 import { isOpen } from "@/utils/is-open"
 import { isBusyToday } from "@/utils/is-busy"
@@ -44,15 +46,16 @@ export default function Cafe({ params }) {
     }, [pending])
 
     useEffect(() => {
+        console.log(params.slug)
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
             const { data, error } = await supabase
                 .from("cafes")
                 .select("*, likes(*), reviews(*)")
-                .eq("cafe_id", params.slug)
+                .eq("slug_url", params.slug)
 
-            setIsOpened(isOpen(data[0].opening_hours))
-            setIsBusy(isBusyToday(data[0].popular_times))
+            setIsOpened(true)
+            setIsBusy(false)
 
             const { data: user } = await supabase
                 .from("users")
@@ -72,21 +75,8 @@ export default function Cafe({ params }) {
         params && getData()
     }, [params])
 
-    async function handleLike() {
-        try {
-            const formData = new FormData();
-            formData.append("postId", data.cafe_id);
-
-            if (liked) {
-                await DislikeAction(formData);
-                setLiked(false)
-            } else {
-                await LikeAction(formData);
-                setLiked(true)
-            }
-        } catch (error) {
-            console.error('Error toggling like/dislike:', error);
-        }
+    function capitalizarPrimeraLetra(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     function handleShare() {
@@ -148,27 +138,33 @@ export default function Cafe({ params }) {
                                         </span>
                                         <span>({data?.ratings})</span>
                                     </div>
-                                    <Link href={`https://www.google.es/maps/place/${data?.address.replace(" ", "+").replace("/", "+")}`} className="flex items-center gap-2 underline hover:text-brand">
+                                    <Link href={data?.url} className="flex items-center gap-2 underline hover:text-brand">
                                         <Location size="24" color="#CC7843" />
                                         <span>{data?.address}</span>
                                     </Link>
                                 </div>
                             </div>
-                            <Image
-                                src={imageError ? "/fallback-image.png" : data.main_image_url}
+                            {/* <Image
+                                src={imageError ? "/fallback-image.png" : data?.photos?.[0]}
                                 width={1080}
                                 height={1080}
                                 className="rounded-lg"
                                 alt={data.name}
                                 onError={() => setImageError(true)}
-                            />
+                            /> */}
+                            {/* <Gallery photos={data?.photos} limit={4} cols={2} rows={2} /> */}
+                            <ScrollGallery photos={data?.photos} />
                         </div>
                         <div className="flex flex-col gap-5 lg:w-1/3">
                             <hr className="text-gray lg:hidden" />
                             <div className="flex flex-col gap-5 p-5 text-lg">
                                 <div className="flex items-center gap-5">
                                     <Tag size="24" color="#111111" />
-                                    <span>{data?.category}</span>
+                                    <span>{
+                                        data.category ?
+                                            capitalizarPrimeraLetra(data?.category?.replace("_", " "))
+                                            : "Not provided"
+                                    }</span>
                                 </div>
                                 <div className="flex items-center gap-5">
                                     <Clock size="24" color="#111111" />
@@ -182,11 +178,14 @@ export default function Cafe({ params }) {
                                 </div>
                                 <div className="flex items-center gap-5">
                                     <Dollar size="24" color="#111111" />
-                                    <span>{data?.price_level}</span>
+                                    <span>{data.price ?
+                                        capitalizarPrimeraLetra(data?.price.split("_")[2].toLowerCase())
+                                        : "Not provided"
+                                    }</span>
                                 </div>
                                 <div className="flex items-center gap-5">
                                     <Phone size="24" color="#111111" />
-                                    <span>{data?.phone}</span>
+                                    <span>{data.phone ? data.phone : "Not provided"}</span>
                                 </div>
                             </div>
                             <ReviewsForm cafeId={data.cafe_id} authorId={sid} />

@@ -61,7 +61,7 @@ const Filters = ({ props, setPlaceData, cafes }) => {
         if (props.place) {
             const placeLower = props.place.toLowerCase();
             updatedPlaces = updatedPlaces.filter(coffee =>
-                coffee.address.toLowerCase().includes(placeLower) || coffee.name.toLowerCase().includes(placeLower)
+                coffee.address?.toLowerCase().includes(placeLower) || coffee.name.toLowerCase().includes(placeLower)
             );
         }
 
@@ -81,11 +81,9 @@ const Filters = ({ props, setPlaceData, cafes }) => {
                 // Implementar la lógica de ordenamiento por precio aquí
                 // Ejemplo:
                 const priceRank = {
-                    "Barato": 1,
-                    "Inexpensive": 2,
-                    "Moderately expensive": 3,
-                    "Caro": 4,
-                    "Expensive": 5
+                    "PRICE_LEVEL_INEXPENSIVE": 1,
+                    "PRICE_LEVEL_MODERATE": 3,
+                    "PRICE_LEVEL_EXPENSIVE": 5
                 };
                 return priceRank[a.price] - priceRank[b.price];
             });

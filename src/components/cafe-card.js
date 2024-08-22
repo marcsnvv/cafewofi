@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Heart, Star, Location } from "../modules/icons"
 import { LikeAction } from "@/app/actions/like"
 import Link from "next/link"
+import Image from "next/image"
 
 // Función para parsear el precio
 function parsePrice(price) {
@@ -57,8 +58,14 @@ export default function CoffeeCard({ size, data, props }) {
     const [liked, setLiked] = useState(false)
     const [loading, setLoading] = useState(true)
     const [imgError, setImgError] = useState(false) // Estado para manejar errores de imagen
+    const [imageUrl, setImageUrl] = useState(null)
+    const [imageWidth, setImageWidth] = useState(1080)
+    const [imageHeight, setImageHeight] = useState(1080)
 
     useEffect(() => {
+        // Set del image url y las dimensiones
+        setImageUrl(data?.photos[0])
+
         // Verifica si data.cafe_id está en props.likes
         if (props.likes.some(like => like.cafe_id === data.cafe_id)) {
             setLiked(true)
@@ -82,13 +89,21 @@ export default function CoffeeCard({ size, data, props }) {
 
     if (size === "xs") {
         return (
-            <Link href={`/cafe/${data.cafe_id}`} className="relative flex">
-                <img
-                    src={imgError ? "/fallback-image.png" : data.main_image_url} // Usa una imagen de fallback si ocurre un error
+            <Link href={`/cafe/${data.slug_url}`} className="relative flex">
+                <Image
+                    src={imgError ? "/fallback-image.png" : imageUrl}
+                    width={imageWidth}
+                    height={imageHeight}
+                    className="rounded-lg hover:shadow-xl cursor-pointer w-full"
+                    alt={data.name}
+                    onError={() => setImgError(true)}
+                />
+                {/* <img
+                    src={imgError ? "/fallback-image.png" : `https:${data.photos[0].authorAttributions.photoUri}`} // Usa una imagen de fallback si ocurre un error
                     onError={handleImageError} // Maneja el error de carga
                     className="rounded-lg hover:shadow-xl cursor-pointer w-full"
                     alt={data.name}
-                />
+                /> */}
                 <form className="z-10 absolute" action={LikeAction}>
                     <input name="postId" className="hidden" value={data.cafe_id}></input>
                     <button
