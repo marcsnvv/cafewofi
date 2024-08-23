@@ -125,9 +125,6 @@ export default function Cafe({ params }) {
                                             <Heart color={liked ? "red" : "#6B6F7B"} />
                                         </button>
                                     </form>
-                                    <div className="hidden lg:block">
-                                        <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
-                                    </div>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">
@@ -152,6 +149,14 @@ export default function Cafe({ params }) {
                             <ScrollGallery photos={data?.photos} />
                         </div>
                         <div className="flex flex-col gap-5 lg:w-1/3">
+                            <div className="hidden lg:flex w-full">
+                                <ReserveButton
+                                    cafeId={data.cafe_id}
+                                    userId={sid}
+                                    cafeName={data.name}
+                                    openingHours={data.opening_hours}
+                                />
+                            </div>
                             <hr className="text-gray lg:hidden" />
                             <div className="flex flex-col gap-5 p-5 text-lg">
                                 <div className="flex items-center gap-5">
@@ -203,7 +208,6 @@ export default function Cafe({ params }) {
                 !loading && (
                     <section className="lg:hidden fixed bottom-0 left-0 w-full bg-white text-black p-4">
                         <div className="flex justify-between items-center">
-                            <span className="text-lg font-semibold">Reserve now!</span>
                             <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
                         </div>
                     </section>
