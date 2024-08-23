@@ -135,7 +135,7 @@ export default function Account() {
                                                 </Tooltip>
                                             )}
                                             {profile?.is_verified && (
-                                                <Tooltip text="Verified by CWF">
+                                                <Tooltip text="Verified">
                                                     <Verified />
                                                 </Tooltip>
                                             )}

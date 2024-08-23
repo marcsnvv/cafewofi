@@ -48,6 +48,9 @@ export default function Cafe({ params }) {
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                window.location.href = "/"
+            }
             const { data, error } = await supabase
                 .from("cafes")
                 .select("*, likes(*), reviews(*)")

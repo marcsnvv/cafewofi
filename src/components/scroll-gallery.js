@@ -1,70 +1,61 @@
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image"
+import { ArrowLeft, ArrowRight } from "@/modules/icons";
 
 const ScrollGallery = ({ photos }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startPos, setStartPos] = useState(0);
     const galleryRef = useRef(null);
 
-    // Scroll to a specific index
+    const handleScroll = (e) => {
+        const scrollLeft = e.target.scrollLeft;
+        const width = e.target.clientWidth;
+        const newIndex = Math.round(scrollLeft / width);
+        setCurrentIndex(newIndex);
+    };
+
     const scrollToIndex = (index) => {
         if (galleryRef.current) {
             galleryRef.current.scrollTo({
                 left: index * galleryRef.current.clientWidth,
                 behavior: "smooth",
             });
+            setCurrentIndex(index);
         }
     };
 
-    // Toggle image expansion
-    const toggleExpand = () => {
+    const toggleExpand = (e) => {
+        e.preventDefault();
         setIsExpanded(!isExpanded);
     };
 
-    // Handle drag start
-    const handleMouseDown = (e) => {
-        setIsDragging(true);
-        setStartPos(e.clientX);
-        galleryRef.current.style.cursor = "grabbing";
+    const handlePrevClick = () => {
+        if (currentIndex > 0) {
+            scrollToIndex(currentIndex - 1);
+        }
     };
 
-    // Handle drag end and decide if the image should change
-    const handleMouseUp = (e) => {
-        setIsDragging(false);
-        galleryRef.current.style.cursor = "grab";
-
-        const endPos = e.clientX;
-        const diff = startPos - endPos;
-
-        // Swipe left
-        if (diff > 50 && currentIndex < photos.length - 1) {
-            setCurrentIndex(currentIndex + 1);
+    const handleNextClick = () => {
+        if (currentIndex < photos.length - 1) {
             scrollToIndex(currentIndex + 1);
-        }
-        // Swipe right
-        else if (diff < -50 && currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-            scrollToIndex(currentIndex - 1);
         }
     };
 
     return (
         <div className="relative w-full">
-            {/* Gallery container */}
+            {/* Contenedor de la galería de imágenes */}
             <div
                 ref={galleryRef}
-                className="flex overflow-hidden snap-x snap-mandatory scrollbar-hide cursor-grab"
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide cursor-grab"
+                onScroll={handleScroll}
             >
                 {photos?.map((photo, index) => (
                     <div
                         key={index}
                         className="flex-shrink-0 snap-center w-full h-[500px] relative"
-                        onClick={toggleExpand}
+                        onClick={(e) => {
+                            toggleExpand(e);
+                        }}
                     >
                         <Image
                             src={photo}
@@ -77,7 +68,21 @@ const ScrollGallery = ({ photos }) => {
                 ))}
             </div>
 
-            {/* Indicators */}
+            {/* Flechas de navegación */}
+            <button
+                className="hidden lg:flex absolute left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/50 text-white rounded-full"
+                onClick={handlePrevClick}
+            >
+                <ArrowLeft color="#fff" />
+            </button>
+            <button
+                className="hidden lg:flex absolute right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/50 text-white rounded-full"
+                onClick={handleNextClick}
+            >
+                <ArrowRight color="#fff" />
+            </button>
+
+            {/* Indicadores de la imagen actual */}
             <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
                 {photos?.map((_, index) => (
                     <button
@@ -89,10 +94,10 @@ const ScrollGallery = ({ photos }) => {
                 ))}
             </div>
 
-            {/* Expanded image modal */}
+            {/* Modal de expansión de la imagen */}
             {isExpanded && (
                 <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-                    {/* Close button */}
+                    {/* Botón de cierre */}
                     <button
                         onClick={toggleExpand}
                         className="absolute top-4 right-4 text-white text-3xl z-50"
@@ -103,7 +108,7 @@ const ScrollGallery = ({ photos }) => {
                         <Image
                             src={photos[currentIndex]}
                             layout="fill"
-                            objectFit="contain"
+                            objectFit="contain" // Asegura que las imágenes verticales no se corten
                             alt={`Image ${currentIndex}`}
                             className="rounded-lg"
                         />

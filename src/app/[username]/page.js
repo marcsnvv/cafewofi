@@ -187,7 +187,7 @@ export default function User({ params }) {
                                                 </Tooltip>
                                             )}
                                             {profile?.is_verified && (
-                                                <Tooltip text="Verified by CWF">
+                                                <Tooltip text="Verified">
                                                     <Verified />
                                                 </Tooltip>
                                             )}
