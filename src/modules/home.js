@@ -11,6 +11,7 @@ import Topbar from "@/components/topbar"
 import Typewriter from 'typewriter-effect'
 import Label from "@/components/label"
 import Popup from "@/components/popup"
+import Login from "./popup/login"
 
 const workplaces = [
     "Barcelona",
@@ -128,6 +129,9 @@ export default function HomePage({ name, avatar_url }) {
             {showModal && (
                 <Popup
                     opened
+                    content={
+                        <Login />
+                    }
                 />
             )}
         </div>

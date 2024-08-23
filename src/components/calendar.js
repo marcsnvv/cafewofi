@@ -92,14 +92,13 @@ const Calendar = ({ handleSelectDate, openingHours }) => {
                     const times = generateAvailableTimes(openTime, closeTime)
                     setAvailableTimes(times)
                 } catch (error) {
-                    console.error('Error processing hours:', error.message)
                     setAvailableTimes([])
                 }
             } else {
                 setAvailableTimes([])  // Closed on this day
             }
         }
-    }, [selectedDate, opening_hours])
+    }, [selectedDate])
 
     return (
         <div className="p-4 rounded-lg bg-white shadow-lg max-w-lg w-full mx-auto">
@@ -166,12 +165,6 @@ const Calendar = ({ handleSelectDate, openingHours }) => {
             {/* Selected Date and Time */}
             {selectedDate && selectedTime && (
                 <div className="w-full mt-4">
-                    {/* <p>
-                        Selected Date: {selectedDate.toLocaleDateString()}
-                    </p>
-                    <p>
-                        Selected Time: {selectedTime}
-                    </p> */}
                     <Button
                         className="w-full"
                         onClick={(event) => handleSelectDate(event, selectedDate, selectedTime)}

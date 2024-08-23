@@ -40,19 +40,29 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
 
     async function checkReservation(userId, date) {
         try {
+            // Convertir la fecha a una cadena en formato ISO y extraer la parte de la fecha (YYYY-MM-DD)
+            const formattedDate = new Date(date).toISOString().split('T')[0];
             // Consulta optimizada para verificar directamente si existe una reserva para ese usuario y fecha
             const { data, error } = await supabase
                 .from("reservations")
-                .select("reservation_date")
+                .select("*")
                 .eq("user_id", userId)
-                .eq("reservation_date", date) // Filtrar por fecha
+                .eq('reservation_date', formattedDate)
 
             if (error) {
                 throw error; // Arroja el error para que sea manejado externamente
             }
 
+            console.log("CHECK", data)
+            console.log("DATE", formattedDate)
             // Si existe alguna fila, significa que ya hay una reserva en esa fecha
-            return data.length > 0;
+            if (data.length > 0) {
+                setButtonText("Close")
+                return true
+            } else {
+                return false
+            }
+            // return false
         } catch (error) {
             console.error("Error checking reservation:", error.message);
             return false; // Retornar false en caso de error, o podrías manejarlo de otra forma
@@ -62,6 +72,7 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
     function handleClosePopup() {
         setShowConfirmPopup(false)
         setButtonText("I'm going")
+        setErrorMessage(null)
         setTitle(<>Do you want to confirm your reservation @ <span className="font-nyght">{cafeName}</span> ?</>)
     }
 
@@ -74,7 +85,8 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
         setButtonDisabled(true)
 
         // Verificar si ya hay una reserva en ese día
-        const hasReservation = await checkReservation(userId, date);
+        const hasReservation = await checkReservation(userId, date)
+        console.log("HAS RESV.", hasReservation)
 
         if (hasReservation) {
             setErrorMessage("You already have a reservation on this date.")
@@ -107,15 +119,23 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
             setTimeout(() => {
                 setButtonText('Close')
                 setButtonDisabled(false)
-            }, 5000)
+            }, 3000)
         }, 2000)
+    }
+
+    function handlerClosePp() {
+        setErrorMessage(null)
+        setShowConfirmPopup(false)
     }
 
     return (
         <>
 
             {showCalendar ?
-                <Calendar handleSelectDate={handleDateSelect} openingHours={openingHours} /> :
+                <Calendar
+                    handleSelectDate={handleDateSelect}
+                    openingHours={openingHours}
+                /> :
                 (
                     <Button
                         className="w-full px-10 font-bold text-lg lg:text-base"
@@ -127,6 +147,7 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
             {showConfirmPopup &&
                 <Popup
                     opened={showConfirmPopup}
+                    closeHandler={handlerClosePp}
                     content={
                         <div className="p-5 flex flex-col gap-5">
                             <h4 className="font-semibold text-xl pr-8">
@@ -138,12 +159,12 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
                                 <input name="reservationDate" className="hidden" value={date} readOnly></input>
                                 <input name="reservationTime" className="hidden" value={time} readOnly></input>
                                 {buttonText === "I'm going" && (
-                                    <div className="w-full flex justify-between border border-gray rounded-lg">
-                                        <div className="flex items-center justify-center border-r border-r-gray p-2">
-                                            <span>Date: {formatDate(date)}</span>
+                                    <div className="w flex justify-between border border-gray rounded-lg">
+                                        <div className=" w-1/2 flex items-center justify-start border-r border-r-gray p-2">
+                                            <span>{formatDate(date)}</span>
                                         </div>
-                                        <div className="flex items-start justify-start p-2">
-                                            <span>Time: {time}</span>
+                                        <div className="w-1/2 flex items-center justify-start p-2">
+                                            <span>{time}</span>
                                         </div>
                                     </div>
                                 )}
