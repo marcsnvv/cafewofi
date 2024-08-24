@@ -48,6 +48,10 @@ export default function Cafe({ params }) {
                 .select("*, likes(*), reviews(*)")
                 .eq("slug_url", params.slug)
 
+            if (data.length === 0) {
+                window.location.href = "/"
+            }
+
             setIsOpened(true)
             setIsBusy(false)
 
@@ -200,7 +204,11 @@ export default function Cafe({ params }) {
                                     <span>{data.phone ? data.phone : "Not provided"}</span>
                                 </div>
                             </div>
-                            <ReviewsForm cafeId={data.cafe_id} authorId={sid} />
+                            <ReviewsForm
+                                cafeId={data.cafe_id}
+                                authorId={sid}
+                                cafeSlug={data.slug_url}
+                            />
                             {data?.reviews &&
                                 data.reviews
                                     .slice()

@@ -1,15 +1,20 @@
 "use server"
 
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 export async function WriteReviewAction(formData) {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+        console.log("There is no session to like this cafe :/")
+        return
+    }
 
     const content = formData.get("content")
     const cafeId = formData.get("cafe_id")
+    const cafeSlug = formData.get("slug_url")
     const authorId = formData.get("author_id")
     const rating = formData.get("rating")
 
@@ -37,7 +42,7 @@ export async function WriteReviewAction(formData) {
 
         console.log('Review inserted successfully:', reviewData)
         revalidatePath("/cafe")
-        redirect("/cafe/" + cafeId)
+        redirect("/cafe/" + cafeSlug)
     } catch (error) {
         console.error('Error inserting review:', error.message)
         throw error

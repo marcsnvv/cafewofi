@@ -5,7 +5,7 @@ import { Star, PaperPlane } from "@/modules/icons"
 import Button from "@/components/button"
 import { WriteReviewAction } from "@/app/actions/write-review"
 
-export default function ReviewsForm({ cafeId, authorId }) {
+export default function ReviewsForm({ cafeId, cafeSlug, authorId }) {
     const [reviewStars, setReviewStars] = useState(0)
     const [formError, setFormError] = useState(null)
 
@@ -42,6 +42,7 @@ export default function ReviewsForm({ cafeId, authorId }) {
             </div>
             <form className="relative grid gap-4" id="reviewForm" action={WriteReviewAction} disabled={formError != null}>
                 <input className="hidden" name="cafe_id" value={cafeId} />
+                <input className="hidden" name="slug_url" value={cafeSlug} />
                 <input className="hidden" name="author_id" value={authorId} />
                 <input className="hidden" name="rating" value={reviewStars} />
                 <textarea
