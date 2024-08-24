@@ -47,7 +47,7 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
                 .from("reservations")
                 .select("*")
                 .eq("user_id", userId)
-                .eq('reservation_date', formattedDate)
+                .eq("reservation_date", formattedDate)
 
             if (error) {
                 throw error; // Arroja el error para que sea manejado externamente
@@ -55,7 +55,6 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
 
             console.log("CHECK", data)
             console.log("DATE", formattedDate)
-            // Si existe alguna fila, significa que ya hay una reserva en esa fecha
             if (data.length > 0) {
                 setButtonText("Close")
                 return true

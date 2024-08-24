@@ -2,28 +2,24 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from "@/utils/supabase/client"
-import Image from "next/image"
 import Link from "next/link"
 
 import Topbar from "@/components/topbar"
-import Label from "@/components/label"
 import Review from "@/components/review"
 import Button from "@/components/button"
 import ReviewsForm from "@/components/reviews-form"
-import Gallery from "@/components/gallery"
 import ScrollGallery from "@/components/scroll-gallery"
 import ReserveButton from "@/components/reserve-button"
 
-import { isOpen } from "@/utils/is-open"
-import { isBusyToday } from "@/utils/is-busy"
 import { useFormStatus } from 'react-dom'
 
 // ICONS
-import { Star, Location, Verified, Clock, Flame, Dollar, Phone, Tag, Heart, Share } from "@/modules/icons"
+import { Star, Location, Verified, Clock, Flame, Dollar, Phone, Tag, Heart, Share, Flag } from "@/modules/icons"
 // ACTIONS
 import { LikeAction } from "@/app/actions/like"
 import { DislikeAction } from "@/app/actions/dislike"
 import LoadingPage from "@/modules/loading-page"
+import ReportCafePopup from "@/modules/popup/report-cafe"
 
 export default function Cafe({ params }) {
     const supabase = createClient()
@@ -36,14 +32,9 @@ export default function Cafe({ params }) {
     const [data, setData] = useState()
     const [isOpened, setIsOpened] = useState()
     const [isBusy, setIsBusy] = useState()
-
-    const [loading, setLoading] = useState(true)
-
     const [liked, setLiked] = useState(false)
 
-    useEffect(() => {
-        console.log(pending)
-    }, [pending])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function getData() {
@@ -130,7 +121,7 @@ export default function Cafe({ params }) {
                             <div className="flex items-center justify-between">
                                 <div className="flex flex-col items-start lg:flex-row lg:items-center gap-5">
                                     {data?.is_verified && <div className="flex items-center gap-2">
-                                        <Verified />
+                                        <Verified size="20" />
                                         <span>Verified</span>
                                     </div>}
                                     <div className="flex items-center gap-2">
@@ -141,9 +132,13 @@ export default function Cafe({ params }) {
                                         <span>({data?.ratings})</span>
                                     </div>
                                     <Link href={data?.url} className="flex items-center gap-2 underline hover:text-brand">
-                                        <Location size="24" color="#CC7843" />
-                                        <span>{data?.address}</span>
+                                        <Location size="20" color="#CC7843" />
+                                        <span>{data?.address?.length > 45 ? `${data.address.slice(0, 45)}...` : data?.address}</span>
                                     </Link>
+                                    <ReportCafePopup
+                                        cafeId={data.cafe_id}
+                                        userId={sid}
+                                    />
                                 </div>
                             </div>
                             <ScrollGallery photos={data?.photos} />
