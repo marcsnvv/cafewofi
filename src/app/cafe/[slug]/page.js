@@ -33,6 +33,7 @@ export default function Cafe({ params }) {
     const [isOpened, setIsOpened] = useState()
     const [isBusy, setIsBusy] = useState()
     const [liked, setLiked] = useState(false)
+    const [animating, setAnimating] = useState(false);
 
     const [loading, setLoading] = useState(true)
 
@@ -85,6 +86,17 @@ export default function Cafe({ params }) {
         }
     }
 
+    function handleLike() {
+        // Cambia el estado de like
+        setLiked(!liked);
+
+        // Inicia la animación
+        setAnimating(true);
+
+        // Después de la animación, desactiva el estado animado
+        setTimeout(() => setAnimating(false), 500); // Duración de la animación en milisegundos
+    }
+
     return (
         <main>
             <Topbar
@@ -106,12 +118,16 @@ export default function Cafe({ params }) {
                                     >
                                         <Share />
                                     </Button>
-                                    <form className="" action={DislikeAction}>
+                                    <form
+                                        className=""
+                                        action={liked ? DislikeAction : LikeAction}
+                                        onSubmit={handleLike}
+                                    >
                                         <input name="postId" className="hidden" value={data.cafe_id}></input>
                                         <button
                                             type="submit"
-                                            className={`rounded-full hover:bg-white p-2 m-2 bg-lightgray`}
-                                            onClick={() => setLiked(!liked)}
+                                            className={`rounded-full hover:bg-white p-2 m-2 bg-lightgray transition-transform duration-500 ease-in-out ${animating ? "scale-125" : ""
+                                                }`}
                                         >
                                             <Heart color={liked ? "red" : "#6B6F7B"} />
                                         </button>
