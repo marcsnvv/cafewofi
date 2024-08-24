@@ -131,12 +131,12 @@ export default function Notifications() {
                     <h2 className="text-2xl font-semibold">Notifications</h2>
                     <div className="mt-14">
                         {notifications.length === 0 ? (
-                            <section className="h-screen w-screen flex items-center justify-center">
+                            <div className="mt-56 h-full w-screen flex items-center justify-center">
                                 <div className="flex flex-col items-center justify-center gap-5">
                                     <Image src="/notfound.png" width={150} height={150} />
                                     <span className="text-lg font-nyght">Nothing here...</span>
                                 </div>
-                            </section>
+                            </div>
                         ) : (
                             <ul>
                                 {notifications.map(notification => (
