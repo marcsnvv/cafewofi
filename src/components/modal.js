@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 
 import UserModal from "@/modules/modals/user"
 
-export default function Modal({ trigger, variant }) {
+export default function Modal({ children, trigger, variant }) {
     const [modal, setModal] = useState(false)
     const modalRef = useRef(null)
 
@@ -27,8 +27,8 @@ export default function Modal({ trigger, variant }) {
                 {trigger}
             </button>
             {modal && (
-                <div className="absolute mt-4 right-0 w-[255px] z-50">
-                    <UserModal />
+                <div className="absolute mt-4 right-0 max-w-[255px] z-50">
+                    {children}
                 </div>
             )}
         </div>

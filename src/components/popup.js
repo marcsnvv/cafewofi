@@ -24,11 +24,9 @@ export default function Popup({ trigger, content, opened, closeHandler }) {
 
     return (
         <>
-            {!modal && (
-                <button onClick={() => setModal(true)}>
-                    {trigger}
-                </button>
-            )}
+            <button onClick={() => setModal(true)}>
+                {trigger}
+            </button>
             {modal && (
                 <div className="z-50 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white rounded-md flex flex-col gap-4 w-auto max-w-[400px]">

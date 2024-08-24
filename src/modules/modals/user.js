@@ -31,7 +31,7 @@ export default function UserModal() {
     }, [])
 
     return (
-        <div className="border-2 border-gray rounded-2xl bg-white overflow-hidden">
+        <div className="w-[255px] border-2 border-gray rounded-2xl bg-white overflow-hidden">
             <div className="cursor-pointer flex items-center justify-start p-4 hover:bg-lightgray">
                 <Bulb color="#111111" />
                 <span className="ml-4">About CWF</span>

@@ -9,6 +9,7 @@ import Popup from "./popup"
 import { User } from "@/modules/icons"
 import Label from "./label"
 import Login from "@/modules/popup/login"
+import UserModal from "@/modules/modals/user"
 
 export default function UserCard({ avatar_url }) {
     return (
@@ -24,7 +25,9 @@ export default function UserCard({ avatar_url }) {
                             height={50}
                             className="rounded-full border-2 border-brand/10"
                         />
-                    } />
+                    } >
+                    <UserModal />
+                </Modal>
             ) : (
                 <Popup
                     trigger={

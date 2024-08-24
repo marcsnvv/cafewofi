@@ -64,7 +64,7 @@ export default function CoffeeCard({ size, data, props }) {
 
     useEffect(() => {
         // Set del image url y las dimensiones
-        setImageUrl(data?.photos[0])
+        setImageUrl(data?.photos?.[0])
 
         // Verifica si data.cafe_id está en props.likes
         if (props.likes.some(like => like.cafe_id === data.cafe_id)) {
