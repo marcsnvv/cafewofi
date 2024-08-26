@@ -3,6 +3,8 @@
 import { createClient } from "@/utils/supabase/client"
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
+
 import Topbar from "@/components/topbar"
 import CoffeeCard from "@/components/cafe-card"
 import Review from "@/components/review"
@@ -25,11 +27,13 @@ export default function User({ params }) {
     const [avatar, setAvatar] = useState()
     const [friendStatus, setFriendStatus] = useState()
     const [isFriend, setIsFriend] = useState(false)
+    const [activeSection, setActiveSection] = useState('likes')
+
+    const [commonFriends, setCommonFriends] = useState([])
 
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
-            // setAvatar(session?.user?.user_metadata?.avatar_url)
 
             if (!session) {
                 window.location.href = "/"
@@ -75,6 +79,11 @@ export default function User({ params }) {
 
             setAvatar(loggedInUserData.avatar_url)
 
+
+
+
+
+
             // Obtener revisiones del usuario
             const { data: reviewsData, error: reviewsError } = await supabase
                 .from('reviews')
@@ -92,7 +101,8 @@ export default function User({ params }) {
                 .select(`
                     cafes (
                         cafe_id,
-                        name
+                        name,
+                        photos
                     )
                 `)
                 .eq('user_id', userData.id)
@@ -102,16 +112,55 @@ export default function User({ params }) {
                 return
             }
 
-            // Obtener amigos del usuario
-            const { data: friendsData, error: friendsError } = await supabase
+            // Obtener amigos del usuario visitado
+            const { data: visitedUserFriends, error: visitedUserFriendsError } = await supabase
                 .from('friends')
                 .select('friend_id')
-                .eq('user_id', userData.id)
+                .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
 
-            if (friendsError) {
-                console.log(friendsError)
+
+            if (visitedUserFriendsError) {
+                console.log(visitedUserFriendsError)
                 return
             }
+
+            // Obtener amigos del usuario logueado
+            const { data: loggedUserFriends, error: loggedUserFriendsError } = await supabase
+                .from('friends')
+                .select('friend_id')
+                .or(`user_id.eq.${session.user.id},friend_id.eq.${session.user.id}`)
+
+            if (loggedUserFriendsError) {
+                console.log(loggedUserFriendsError)
+                return
+            }
+
+            // Encontrar amigos comunes
+            const commonFriendIds = visitedUserFriends
+                .filter(vuf => loggedUserFriends.some(luf => luf.friend_id === vuf.friend_id))
+                .map(f => f.friend_id)
+
+            // Obtener detalles de los amigos comunes
+            if (commonFriendIds.length > 0) {
+                console.log(session.user.id)
+                console.log(commonFriendIds)
+                if (commonFriendIds.length === 1 && commonFriendIds[0] === userData.id) {
+                    setIsFriend(true)
+                } else {
+                    const { data: commonFriendsData, error: commonFriendsError } = await supabase
+                        .from('users')
+                        .select('id, name, username, avatar_url')
+                        .in('id', commonFriendIds)
+
+                    if (commonFriendsError) {
+                        console.log("COMMON FRIENDS ERROR:", commonFriendsError)
+                    } else {
+                        setCommonFriends(commonFriendsData)
+                    }
+                }
+
+            }
+
 
             // Obtener notificaciones del usuario
             const { data: notificationsData, error: notificationsError } = await supabase
@@ -126,9 +175,7 @@ export default function User({ params }) {
                 console.log(notificationsError)
             }
 
-            const isFriend = friendsData?.some(friend => friend.friend_id === session.user.id)
             setFriendStatus(notificationsData?.status)
-            setIsFriend(isFriend)
             setProfile(userData)
             setReviews(reviewsData)
             setLikes(likesData?.map(like => like.cafes))
@@ -210,63 +257,112 @@ export default function User({ params }) {
                                 </div>
                             </div>
                         </section>
-
-                        <section className="flex flex-col items-center mt-4 p-5">
+                        <div className="w-full flex items-center gap-2 mb-4 px-5">
+                            {/* ... badges existentes ... */}
                             {isFriend ? (
-                                <Button disabled variant="secondary" className="w-full">
-                                    Already Friends
-                                </Button>
+                                <Button className="w-full" variant="secondary" disabled>Already friends</Button>
                             ) : friendStatus === 'pending' ? (
-                                <Button disabled className="bg-lightbrand text-brand w-full">Friend Request Sent</Button>
+                                <Button className="w-full" disabled>Request pending</Button>
                             ) : (
-                                <Button onClick={handleAddFriend} className="w-full">Add Friend</Button>
+                                <Button className="w-full" onClick={handleAddFriend}>Add friend</Button>
                             )}
-                        </section>
+                        </div>
 
-                        <section className="flex lg:flex-row flex-col justify-between">
-                            <div className="p-5 lg:w-1/2 w-full">
-                                <div className="flex flex-col gap-5">
-                                    <h3 className="font-semibold font-nyght text-xl">Cafes that {profile?.name} likes</h3>
+                        {/* Toggle buttons */}
+                        <div className="flex justify-around mb-5 text-base font-nyght">
+                            <button
+                                className={`p-2 ${activeSection === 'likes' ? 'text-darkgray' : 'text-gray'} rounded-lg`}
+                                onClick={() => setActiveSection('likes')}
+                            >
+                                Cafes {profile?.name} like
+                            </button>
+                            <button
+                                className={`p-2 ${activeSection === 'reviews' ? 'text-darkgray' : 'text-gray'} rounded-lg`}
+                                onClick={() => setActiveSection('reviews')}
+                            >
+                                {profile?.name}'s reviews
+                            </button>
+                            <button
+                                className={`p-2 ${activeSection === 'friends' ? 'text-darkgray' : 'text-gray'} rounded-lg`}
+                                onClick={() => setActiveSection('commonFriends')}
+                            >
+                                Common friends
+                            </button>
+                        </div>
 
-                                    <div className="grid grid-cols-2 gap-5">
-                                        {likes &&
-                                            likes
-                                                .slice() // Hacemos una copia para no modificar el array original
-                                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
-                                                .map((coffee, index) => (
-                                                    <CoffeeCard
-                                                        key={index}
-                                                        props={{ likes }}
-                                                        data={coffee}
-                                                        size="xs"
-                                                    />
-                                                ))}
-                                    </div>
+                        {/* Content Sections */}
+                        {
+                            activeSection === 'likes' && (
+                                <div className="grid lg:grid-cols-2 grid-cols-1 gap-5 p-5">
+                                    {likes.length > 0 ? (
+                                        likes
+                                            .slice()
+                                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                                            .map((coffee, index) => (
+                                                <CoffeeCard
+                                                    key={index}
+                                                    props={{ likes }}
+                                                    data={coffee}
+                                                    size="xs"
+                                                />
+                                            ))
+                                    ) : (
+                                        <p className="text-gray">No likes found.</p>
+                                    )}
                                 </div>
-                            </div>
+                            )
+                        }
 
-                            <div className="p-5 mt-20 lg:w-1/2 w-auto">
-                                <div className="flex flex-col gap-5">
-                                    <h3 className="font-semibold font-nyght text-xl">{profile?.name}'s reviews</h3>
-
-                                    <div className="flex flex-wrap gap-5">
-                                        {reviews &&
-                                            reviews
-                                                .slice() // Hacemos una copia para no modificar el array original
-                                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Ordenamos por fecha de creación de más reciente a más antiguo
-                                                .map((review, index) => (
-                                                    <Review
-                                                        key={index}
-                                                        data={review}
-                                                        avatar={profile?.avatar_url}
-                                                        name={profile?.name}
-                                                        username={profile?.username}
-                                                    />
-                                                ))}
-                                    </div>
+                        {
+                            activeSection === 'reviews' && (
+                                <div className="flex flex-wrap gap-5 p-5">
+                                    {reviews.length > 0 ? (
+                                        reviews
+                                            .slice()
+                                            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                                            .map((review, index) => (
+                                                <Review
+                                                    key={index}
+                                                    data={review}
+                                                    avatar={profile?.avatar_url}
+                                                    name={profile?.name}
+                                                    username={profile?.username}
+                                                />
+                                            ))
+                                    ) : (
+                                        <p className="text-gray">No reviews found.</p>
+                                    )}
                                 </div>
-                            </div>
-                        </section>
+                            )
+                        }
+
+                        {
+                            activeSection === 'commonFriends' && (
+                                <div className="grid gap-5 px-5 py-1 border-b border-lightbrand">
+                                    {commonFriends.length > 0 ? (
+                                        commonFriends.map((friend, index) => {
+                                            const truncateText = (text) => {
+                                                return text.length > 15 ? text.substring(0, 9) + '...' : text;
+                                            }
+
+                                            return (
+                                                <Link key={index} href={`/${friend.username}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        <Image src={friend.avatar_url || '/default-avatar.png'} width={50} height={50} className="rounded-full" alt={friend.name} />
+                                                        <div>
+                                                            <h4 className="font-semibold">{truncateText(friend.name)}</h4>
+                                                            <span className="text-gray">@{truncateText(friend.username)}</span>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            );
+                                        })
+                                    ) : (
+                                        <p className="text-gray">No mutual friends</p>
+                                    )}
+                                </div>
+                            )
+                        }
                     </div>
                 </main>
             )}

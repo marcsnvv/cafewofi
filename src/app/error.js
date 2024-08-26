@@ -4,8 +4,8 @@ import Link from "next/link"
 
 export default function ErrorPage() {
     return <div className="h-screen w-screen flex items-center justify-center">
-        <div className="flex flex-col gap-5">
-            <svg width="600" height="714" viewBox="0 0 600 714" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="flex flex-col gap-5 items-center justify-center">
+            <svg width="200" height="200" viewBox="0 0 600 714" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_710_636)">
                     <path opacity="0.55" d="M288.23 714.494C360.124 714.494 418.405 701.747 418.405 686.023C418.405 670.298 360.124 657.551 288.23 657.551C216.336 657.551 158.054 670.298 158.054 686.023C158.054 701.747 216.336 714.494 288.23 714.494Z" fill="#C6C6C6" />
                     <path opacity="0.55" d="M462.148 703.467C533.848 703.467 591.973 699.341 591.973 694.251C591.973 689.161 533.848 685.035 462.148 685.035C390.448 685.035 332.324 689.161 332.324 694.251C332.324 699.341 390.448 703.467 462.148 703.467Z" fill="#C6C6C6" />
