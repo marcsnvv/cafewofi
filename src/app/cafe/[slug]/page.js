@@ -227,7 +227,12 @@ export default function Cafe({ params }) {
                 !loading && (
                     <section className="lg:hidden fixed bottom-0 left-0 w-full bg-white text-black p-4">
                         <div className="flex justify-between items-center">
-                            <ReserveButton cafeId={data.cafe_id} userId={sid} cafeName={data.name} />
+                            <ReserveButton
+                                cafeId={data.cafe_id}
+                                userId={sid}
+                                cafeName={data.name}
+                                openingHours={data.opening_hours}
+                            />
                         </div>
                     </section>
                 )
