@@ -17,7 +17,7 @@ export default function Notifications() {
     useEffect(() => {
         async function fetchNotifications() {
             const { data: { session } } = await supabase.auth.getSession()
-            if (!session?.user?.id) {
+            if (!session) {
                 window.location.href = "/"
             }
             const { data: profile } = await supabase
