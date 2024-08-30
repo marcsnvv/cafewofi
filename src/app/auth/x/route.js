@@ -1,6 +1,7 @@
 // Twitter Login
 import { createClient } from '@/utils/supabase/server'
-import { NextResponse } from 'next/server'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,13 +13,9 @@ export async function POST() {
     })
 
     if (error) {
-        console.log("ERROR", error)
-        return NextResponse.redirect('/auth/login')
-    } else {
-        console.log(data)
-
-        // Si el usuario no esta registrado, entralo a la base de datos
-
-        NextResponse.redirect('/')
+        redirect('/error')
     }
+
+    revalidatePath('/', 'layout')
+    redirect('/')
 }

@@ -11,15 +11,16 @@ import Label from "./label"
 import Login from "@/modules/popup/login"
 import UserModal from "@/modules/modals/user"
 
-export default function UserCard({ avatar_url }) {
+export default function UserCard({ user }) {
+
     return (
         <>
-            {avatar_url ? (
+            {user ? (
                 <Modal
                     variant="user"
                     trigger={
                         <Image
-                            src={avatar_url}
+                            src={user.avatar_url}
                             alt="user avatar"
                             width={50}
                             height={50}

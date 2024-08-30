@@ -35,8 +35,8 @@ export async function loginWithGoogle() {
         redirect('/error');
     }
 
-    revalidatePath('/', 'layout');
-    redirect('/');
+    revalidatePath('/login', 'layout')
+    redirect('/login')
 }
 
 export async function loginWithTwitter() {
@@ -47,11 +47,11 @@ export async function loginWithTwitter() {
     });
 
     if (error) {
-        redirect('/error');
+        redirect('/error')
     }
 
-    revalidatePath('/', 'layout');
-    redirect('/');
+    revalidatePath('/', 'layout')
+    redirect('/')
 }
 
 export async function signup(formData) {

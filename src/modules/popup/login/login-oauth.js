@@ -27,11 +27,11 @@ export default function SignInWithOAuth({ closeModal, changeToSignInWithEmail })
     return (
         <form className="p-10 rounded-md flex flex-col items-center gap-4">
             <label className="font-nyght text-2xl">Log in</label>
-            <span>Don’t have an account?
+            {/* <span>Don’t have an account?
                 <Link href="/auth/sign-up">
                     <span className="font-bold">Register</span>
                 </Link>
-            </span>
+            </span> */}
             <Button onClick={handleGoogleLogin} className="w-full" variant="secondary">
                 <div className="flex items-center justify-center gap-2">
                     <Google />
@@ -46,12 +46,12 @@ export default function SignInWithOAuth({ closeModal, changeToSignInWithEmail })
                 </div>
             </Button>
 
-            <Button onClick={changeToSignInWithEmail} className="w-full" variant="secondary">
+            {/* <Button onClick={changeToSignInWithEmail} className="w-full" variant="secondary">
                 <div className="flex items-center justify-center gap-2">
                     <Email size="24" />
                     <span className="text-darkgray font-bold">Continue With Email</span>
                 </div>
-            </Button>
+            </Button> */}
 
             <span className="text-xs font-roboto text-center">
                 By entering, I accept CWF <Link href={"/terms"}>Terms & Conditions</Link> of Use and <Link href={"/privacy"}>Privacy Policy</Link>

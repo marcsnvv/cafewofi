@@ -12,8 +12,9 @@ export async function POST() {
     })
 
     if (error) {
-        return NextResponse.redirect('/auth/login')
+        redirect('/error')
     }
 
-    return NextResponse.redirect('/')
+    revalidatePath('/', 'layout')
+    redirect('/')
 }
