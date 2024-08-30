@@ -83,10 +83,8 @@ export default function Notifications() {
 
             const currentUserId = session.user.id
 
-            // Establecer el parámetro de configuración
             await supabase.rpc('set_current_user_id', { user_id: currentUserId })
 
-            // Actualizar el estado de la notificación
             const { error: notificationError } = await supabase
                 .from('notifications')
                 .update({ status: action })  // 'accepted' or 'declined'
@@ -97,7 +95,6 @@ export default function Notifications() {
                 return
             }
 
-            // Si la solicitud es aceptada, actualiza el estado en la tabla 'friends'
             if (action === 'accepted') {
                 const { error: updateFriendsError } = await supabase
                     .from('friends')
@@ -111,15 +108,11 @@ export default function Notifications() {
                 }
             }
 
-            // Si la solicitud es declinada, no es necesario realizar ninguna acción adicional en la tabla 'friends'
-
-            // Actualiza el estado de las notificaciones en el frontend
             setNotifications(notifications.filter(notif => notif.id !== notificationId));
         } catch (error) {
             console.error(`Error handling follow request:`, error);
         }
-    };
-
+    }
 
     return (
         <main>
