@@ -3,11 +3,7 @@
 import { createClient } from '@/utils/supabase/client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { Google, X } from '@/modules/icons'
-import Loading from '@/components/loading'
-import { loginWithGoogle, loginWithTwitter } from "@/app/actions/login"
-import { SignOutAction } from "@/app/actions/signout"
 import Button from '@/components/button'
 import Link from 'next/link'
 

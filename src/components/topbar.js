@@ -63,7 +63,7 @@ export default function Topbar({ avatar_url, ...props }) {
                     }
                 </div>
 
-                <UserCard avatar_url={avatar_url} />
+                <UserCard user={{ avatar_url }} />
             </div>
         </nav>
     )
