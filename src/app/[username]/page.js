@@ -116,8 +116,6 @@ export default function User({ params }) {
             const { data: visitedUserFriends, error: visitedUserFriendsError } = await supabase
                 .from('friends')
                 .select('friend_id')
-                .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
-
 
             if (visitedUserFriendsError) {
                 console.log(visitedUserFriendsError)
@@ -135,9 +133,15 @@ export default function User({ params }) {
                 return
             }
 
+            console.log(visitedUserFriends)
+
             // Encontrar amigos comunes
             const commonFriendIds = visitedUserFriends
-                .filter(vuf => loggedUserFriends.some(luf => luf.friend_id === vuf.friend_id))
+                .filter(vuf => loggedUserFriends.some(
+                    luf => luf.friend_id === vuf.friend_id
+                        && luf.friend_id !== session.user.id
+                        && luf.friend_id !== userData.id
+                ))
                 .map(f => f.friend_id)
 
             // Obtener detalles de los amigos comunes
@@ -338,7 +342,7 @@ export default function User({ params }) {
 
                         {
                             activeSection === 'commonFriends' && (
-                                <div className="grid gap-5 px-5 py-1 border-b border-lightbrand">
+                                <div className="grid gap-5 px-5 py-1 pb-5 border-b border-lightbrand">
                                     {commonFriends.length > 0 ? (
                                         commonFriends.map((friend, index) => {
                                             const truncateText = (text) => {

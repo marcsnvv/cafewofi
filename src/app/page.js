@@ -90,7 +90,7 @@ export default function Home() {
   function searchCW(e) {
     e.preventDefault()
     setLoading(true)
-    if (!avatar && !name) {
+    if (!user) {
       setShowModal(true)
     } else {
       if (query === undefined || query.trim() === "") {
