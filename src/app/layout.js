@@ -15,8 +15,8 @@ const nyght = localFont({
 })
 
 export const metadata = {
-  title: 'Coffee Work Finder',
-  description: 'Find Your Perfect Blend of Work and Sip',
+  title: 'Cafewofi',
+  description: 'Find your coffee shop to work in, anywhere',
 }
 
 
