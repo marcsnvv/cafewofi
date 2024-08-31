@@ -40,6 +40,10 @@ const nextConfig = {
                 source: '/ui',
                 destination: '/',
             },
+            {
+                source: '/discord',
+                destination: 'https://discord.gg/9vvZRpJXsw',
+            },
         ]
     },
 }

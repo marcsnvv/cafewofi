@@ -137,7 +137,7 @@ export default function ReportCafePopup({ cafeId, userId }) {
                         bg-lightbrand rounded-lg p-4 resize-y min-h-[100px] max-h-[205px] overflow-hidden
                         w-full mt-2
                     `}
-                            placeholder="Write a review..."
+                            placeholder="It is not appropriate because..."
                         />
                     </div>
                     <button

@@ -50,7 +50,6 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false)
 
   const [user, setUser] = useState()
-  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     async function getData() {
@@ -72,20 +71,8 @@ export default function Home() {
       }
     }
 
-    // Verificar si hay un parámetro 'code' en la URL
-    const urlParams = new URLSearchParams(window.location.search)
-    const code = urlParams.get('code')
-
-    if (code) {
-      // Si hay un código, actualizar la URL sin el parámetro y forzar un refresh
-      // window.history.replaceState({}, document.title, window.location.pathname)
-      // setRefreshKey(prevKey => prevKey + 1)
-      // router.refresh()
-      // window.location.reload()
-    }
-
     getData()
-  }, [refreshKey])
+  }, [])
 
   function searchCW(e) {
     e.preventDefault()
@@ -160,9 +147,9 @@ export default function Home() {
         </div>
       </div>
 
-      <Link href={"/terms"}>
+      <Link href={"/discord"}>
         <span className="text-lightbrand hover:underline">
-          Terms & Conditions
+          Join our community
         </span>
       </Link>
 
