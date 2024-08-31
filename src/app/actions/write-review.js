@@ -3,6 +3,11 @@
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { Resend } from "resend"
+import ReviewEmail from "@/emails/review"
+
+// Inicializar Resend con tu clave API
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function WriteReviewAction(formData) {
     const supabase = createClient()
@@ -39,6 +44,26 @@ export async function WriteReviewAction(formData) {
         if (error) {
             throw error
         }
+
+        // Obtener información del café
+        const { data: cafeData } = await supabase
+            .from('cafes')
+            .select('name')
+            .eq('cafe_id', cafeId)
+            .single()
+
+        // Enviar correo de confirmación de reseña
+        await resend.emails.send({
+            from: 'Cafewofi <no-reply@cafewofi.com>',
+            to: session.user.email,
+            subject: 'Thank you for your review!',
+            react: ReviewEmail({
+                username: session.user.user_metadata.name,
+                cafeName: cafeData.name,
+                content: content,
+                rating: rating,
+            }),
+        })
 
         console.log('Review inserted successfully:', reviewData)
         revalidatePath("/cafe")

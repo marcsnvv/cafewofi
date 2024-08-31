@@ -25,11 +25,8 @@ export default async function Search({ params }) {
         .from('cafes')
         .select('*')
 
-
-
     const name = user[0]?.name
     const avatar_url = user[0]?.avatar_url
-
 
     return (
         <main>

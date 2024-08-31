@@ -44,8 +44,8 @@ export const convertTo24HourFormat = (timeStr) => {
     hours = hours.padStart(2, '0');
     minutes = minutes.padStart(2, '0');
 
-    return `${hours}:${minutes}`;
-};
+    return `${hours}:${minutes}`
+}
 
 export const convertOpeningHoursToDict = (openingHoursString) => {
     // console.log(openingHoursString)

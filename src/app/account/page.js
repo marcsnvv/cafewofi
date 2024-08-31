@@ -229,7 +229,7 @@ export default function Account() {
 
                         {
                             activeSection === 'friends' && (
-                                <div className="grid gap-5 px-5 py-1 border-b border-lightbrand">
+                                <div className="grid gap-5 px-5 py-1 pb-5 border-b border-lightbrand">
                                     {friends.length > 0 ? (
                                         friends.map((friend, index) => {
                                             // Función para truncar el texto si supera los 15 caracteres

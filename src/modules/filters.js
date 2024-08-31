@@ -127,8 +127,8 @@ const Filters = ({ props, setPlaceData, cafes }) => {
         loading ? (
             <LoadingPage />
         ) : (
-            <section className="z-0 w-screen">
-                <div className="z-40 flex flex-col gap-5 p-5 mt-20 bg-white w-screen lg:w-[50vw] 2xl:w-[40vw]">
+            <section className="z-0 w-full">
+                <div className="z-40 flex flex-col gap-5 p-5 mt-20 bg-white w-full">
                     <h2 className="text-2xl text-darkgray">
                         Coffe Shops in <span className="font-nyght font-semibold">{props.place}</span>
                     </h2>
@@ -205,7 +205,7 @@ const Filters = ({ props, setPlaceData, cafes }) => {
                     </div>
                 }
                 <section
-                    className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-10 p-5 w-screen lg:w-[50vw] 2xl:w-[40vw]"
+                    className="grid grid-cols-1 lg:grid-cols-4 2xl:grid-cols-6 gap-10 p-5 w-full"
                 >
                     {filteredPlaces.map((cafe, index) => (
                         <CoffeeCard
