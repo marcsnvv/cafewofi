@@ -26,7 +26,7 @@ export default function User({ params }) {
     const [likes, setLikes] = useState()
     const [avatar, setAvatar] = useState()
     const [friendStatus, setFriendStatus] = useState()
-    const [isFriend, setIsFriend] = useState(false)
+    const [isFriend, setIsFriend] = useState()
     const [activeSection, setActiveSection] = useState('likes')
 
     const [commonFriends, setCommonFriends] = useState([])
@@ -81,9 +81,6 @@ export default function User({ params }) {
 
 
 
-
-
-
             // Obtener revisiones del usuario
             const { data: reviewsData, error: reviewsError } = await supabase
                 .from('reviews')
@@ -95,7 +92,6 @@ export default function User({ params }) {
                 return
             }
 
-            // Obtener gustos del usuario
             const { data: likesData, error: likesError } = await supabase
                 .from('likes')
                 .select(`
@@ -116,10 +112,8 @@ export default function User({ params }) {
             const { data: visitedUserFriends, error: visitedUserFriendsError } = await supabase
                 .from('friends')
                 .select('friend_id, user_id')
-                // .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
+                .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
                 .eq("status", "accepted")
-
-            console.log(visitedUserFriends)
 
             if (visitedUserFriendsError) {
                 console.log(visitedUserFriendsError)
@@ -137,6 +131,14 @@ export default function User({ params }) {
                 console.log(loggedUserFriendsError)
                 return
             }
+
+            // Check if is friend
+            visitedUserFriends?.map((row) => {
+                if (row.user_id === session.user.id || row.friend_id === session.user.id) {
+                    setIsFriend(true)
+                    console.log("FRIEND!")
+                }
+            })
 
             const luf = loggedUserFriends?.map((friend_row) => {
                 if (friend_row.user_id === session.user.id) return friend_row.friend_id
