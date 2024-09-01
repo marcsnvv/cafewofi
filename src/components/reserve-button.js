@@ -169,7 +169,7 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
                                 )}
                                 <span className="text-gray text-sm flex items-center justify-center gap-2">
                                     <Email size="20" color="#6B6F7B" />
-                                    We will send a confirmation message to both the cafe and you!
+                                    We will send you a confirmation email!
                                 </span>
                                 <span className="text-gray text-sm flex items-center justify-center gap-2">
                                     <Laugh size="20" />

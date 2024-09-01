@@ -134,10 +134,9 @@ export default function Notifications() {
 
     return (
         <>
-
             <Topbar noSearch avatar_url={avatar} />
             <main className="w-full flex items-center justify-center">
-                <div className="lg:max-w-xl w-full h-screen border-x border-lightbrand">
+                <div className="lg:max-w-xl w-full h-screen lg:border-x lg:border-lightbrand">
                     <section className="">
                         <h2 className="text-2xl font-semibold">Notifications</h2>
                         <div className="mt-14">
