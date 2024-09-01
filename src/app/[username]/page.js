@@ -115,7 +115,11 @@ export default function User({ params }) {
             // Obtener amigos del usuario visitado
             const { data: visitedUserFriends, error: visitedUserFriendsError } = await supabase
                 .from('friends')
-                .select('friend_id')
+                .select('friend_id, user_id')
+                // .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
+                .eq("status", "accepted")
+
+            console.log(visitedUserFriends)
 
             if (visitedUserFriendsError) {
                 console.log(visitedUserFriendsError)
@@ -125,46 +129,40 @@ export default function User({ params }) {
             // Obtener amigos del usuario logueado
             const { data: loggedUserFriends, error: loggedUserFriendsError } = await supabase
                 .from('friends')
-                .select('friend_id')
+                .select('friend_id, user_id')
                 .or(`user_id.eq.${session.user.id},friend_id.eq.${session.user.id}`)
+                .eq("status", "accepted")
 
             if (loggedUserFriendsError) {
                 console.log(loggedUserFriendsError)
                 return
             }
 
-            console.log(visitedUserFriends)
+            const luf = loggedUserFriends?.map((friend_row) => {
+                if (friend_row.user_id === session.user.id) return friend_row.friend_id
+                else return friend_row.user_id
+            })
 
-            // Encontrar amigos comunes
-            const commonFriendIds = visitedUserFriends
-                .filter(vuf => loggedUserFriends.some(
-                    luf => luf.friend_id === vuf.friend_id
-                        && luf.friend_id !== session.user.id
-                        && luf.friend_id !== userData.id
-                ))
-                .map(f => f.friend_id)
+            const vuf = visitedUserFriends?.map((friend_row) => {
+                if (friend_row.user_id === userData.id) return friend_row.friend_id
+                else return friend_row.user_id
+            })
 
-            // Obtener detalles de los amigos comunes
-            if (commonFriendIds.length > 0) {
-                console.log(session.user.id)
-                console.log(commonFriendIds)
-                if (commonFriendIds.length === 1 && commonFriendIds[0] === userData.id) {
-                    setIsFriend(true)
-                } else {
-                    const { data: commonFriendsData, error: commonFriendsError } = await supabase
-                        .from('users')
-                        .select('id, name, username, avatar_url')
-                        .in('id', commonFriendIds)
+            const vset = new Set(vuf)
+            const common = luf.filter(friend => vset.has(friend))
+            // Obtener información detallada de los amigos comunes
+            const { data: commonFriendsData, error: commonFriendsError } = await supabase
+                .from('users')
+                .select('avatar_url, name, username')
+                .in('id', common)
 
-                    if (commonFriendsError) {
-                        console.log("COMMON FRIENDS ERROR:", commonFriendsError)
-                    } else {
-                        setCommonFriends(commonFriendsData)
-                    }
-                }
-
+            if (commonFriendsError) {
+                console.log('Error al obtener detalles de amigos comunes:', commonFriendsError)
+                return
             }
 
+            // Establecer los amigos comunes con la información detallada
+            setCommonFriends(commonFriendsData || [])
 
             // Obtener notificaciones del usuario
             const { data: notificationsData, error: notificationsError } = await supabase

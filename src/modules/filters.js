@@ -128,7 +128,7 @@ const Filters = ({ props, setPlaceData, cafes }) => {
             <LoadingPage />
         ) : (
             <section className="z-0">
-                <div className="z-40 w-screen flex flex-col gap-5 p-5 mt-20 bg-white">
+                <div className="z-40 flex flex-col gap-5 p-5 mt-20 bg-white">
                     <h2 className="hidden lg:block text-2xl text-darkgray">
                         Cafes in <span className="font-nyght font-semibold">{props.place}</span>
                     </h2>

@@ -1,6 +1,4 @@
 export const pois = [
-    { "name": "Wi-Fi", "icon": "📶" },
-    { "name": "Good for working on laptop", "icon": "💻" },
     { "name": "Great coffee", "icon": "☕" },
     { "name": "Great tea selection", "icon": "🍵" },
     { "name": "Prepared foods", "icon": "🥪" },
