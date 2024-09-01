@@ -127,12 +127,12 @@ const Filters = ({ props, setPlaceData, cafes }) => {
         loading ? (
             <LoadingPage />
         ) : (
-            <section className="z-0 w-full">
-                <div className="z-40 flex flex-col gap-5 p-5 mt-20 bg-white w-full">
-                    <h2 className="text-2xl text-darkgray">
-                        Coffe Shops in <span className="font-nyght font-semibold">{props.place}</span>
+            <section className="z-0">
+                <div className="z-40 w-screen flex flex-col gap-5 p-5 mt-20 bg-white">
+                    <h2 className="hidden lg:block text-2xl text-darkgray">
+                        Cafes in <span className="font-nyght font-semibold">{props.place}</span>
                     </h2>
-                    <span>{totalResults} results ·{" "}
+                    <span className="hidden lg:block">{totalResults} results ·{" "}
                         <span>Sort by:{" "}
                             <button
                                 onClick={() => {
@@ -149,7 +149,7 @@ const Filters = ({ props, setPlaceData, cafes }) => {
                         </span>
                     </span>
                     <div className="flex justify-between items-start">
-                        <div className="flex flex-wrap gap-2">
+                        <div className="hidden lg:flex flex-wrap gap-2">
                             {/* Renderizar los filtros esenciales */}
                             {essentialFilters.map((poi, index) => (
                                 <button
@@ -193,6 +193,19 @@ const Filters = ({ props, setPlaceData, cafes }) => {
                                 {/* Aquí irían los botones de estructura (Tabla / Lista) */}
                             </div>
                         </div>
+                    </div>
+
+                    {/* MOBILE MENU */}
+                    <div className="flex lg:hidden w-full overflow-y-auto">
+                        {additionalFilters.map((poi, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handleFilterClick(poi.name)}
+                                className={`flex items-center text-center justify-center gap-2 p-1.5 mx-1 text-2xl ${filters.includes(poi.name) && "border-b-2 border-brand"}`}
+                            >
+                                <span>{poi.icon}</span>
+                            </button>
+                        ))}
                     </div>
                 </div>
                 {filteredPlaces.length === 0 &&

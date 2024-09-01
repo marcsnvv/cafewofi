@@ -16,12 +16,20 @@ import Popup from "@/components/popup"
 import Login from "@/modules/popup/login"
 
 const workplaces = [
-  "Barcelona",
+  "Copenhague",
+  "Zagreb",
+  "Vienna",
+  "Dublin",
+  "Amsterdam",
+  "Girona",
+  "Chiang Mai",
+  "Valencia",
   "New York",
   "Cerdegna",
+  "Barcelona",
   "Bali",
-  "Chiang Mai",
   "Medellín",
+  "Madrid",
   "Lisboa",
   "Tbilisi",
   "Praga",
@@ -43,6 +51,17 @@ const workplaces = [
   "Kabul"
 ]
 
+function shuffleArray(array) {
+  const shuffledArray = [...array]; // Crear una copia del array original
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Elegir un índice aleatorio
+    // Intercambiar elementos
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+}
+
+
 export default function Home() {
   const router = useRouter()
   const [query, setQuery] = useState("")
@@ -50,6 +69,11 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false)
 
   const [user, setUser] = useState()
+  const [randomWorkPlaces, setRandomWorkPlaces] = useState()
+
+  useEffect(() => {
+    setRandomWorkPlaces(shuffleArray(workplaces))
+  }, [])
 
   useEffect(() => {
     async function getData() {
@@ -121,7 +145,7 @@ export default function Home() {
             <span className="font-nyght">
               <Typewriter
                 options={{
-                  strings: workplaces,
+                  strings: randomWorkPlaces,
                   autoStart: true,
                   loop: true,
                 }}
