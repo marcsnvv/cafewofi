@@ -133,48 +133,53 @@ export default function Notifications() {
     }
 
     return (
-        <main>
+        <>
+
             <Topbar noSearch avatar_url={avatar} />
-            <section className="">
-                <h2 className="text-2xl font-semibold">Notifications</h2>
-                <div className="mt-14">
-                    {notifications.length === 0 ? (
-                        <div className="mt-56 h-full w-screen flex items-center justify-center">
-                            <div className="flex flex-col items-center justify-center gap-5">
-                                <Image src="/notfound.png" width={150} height={150} alt="Not Found" />
-                                <span className="text-lg font-nyght">Nothing here...</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <ul>
-                            {notifications.map(notification => (
-                                <li key={notification.id} className="px-5 py-3 border-b border-lightbrand">
-                                    <div className="flex items-center justify-between gap-1">
-                                        <div className="flex items-center text-xs">
-                                            <img src={notification.users?.avatar_url || '/default-avatar.png'} alt="Avatar" className="w-10 h-10 rounded-full" />
-                                            <div className="ml-3">
-                                                <p><strong>{notification.users?.username}</strong> sent you a {notification.type}</p>
-                                                <p className="text-xs text-gray">{ETS(notification.created_at)}</p>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {notification.type === 'friend_request' && (
-                                                <div className="flex space-x-2">
-                                                    <Button className={"text-xs"} onClick={() => handleFollowRequest(notification.id, 'accepted', notification.sender_id, notification.recipient_id)}>Accept</Button>
-                                                    <Button className={"bg-secondary text-xs"} onClick={() => handleFollowRequest(notification.id, 'declined', notification.sender_id, notification.recipient_id)}>Decline</Button>
-                                                </div>
-                                            )}
-                                            {notification.status === 'unread' && (
-                                                <Button onClick={() => markAsRead(notification.id)}>Mark as Read</Button>
-                                            )}
-                                        </div>
+            <main className="w-full flex items-center justify-center">
+                <div className="lg:max-w-xl w-full h-screen border-x border-lightbrand">
+                    <section className="">
+                        <h2 className="text-2xl font-semibold">Notifications</h2>
+                        <div className="mt-14">
+                            {notifications.length === 0 ? (
+                                <div className="mt-56 h-full w-screen flex items-center justify-center">
+                                    <div className="flex flex-col items-center justify-center gap-5">
+                                        <Image src="/notfound.png" width={150} height={150} alt="Not Found" />
+                                        <span className="text-lg font-nyght">Nothing here...</span>
                                     </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                                </div>
+                            ) : (
+                                <ul>
+                                    {notifications.map(notification => (
+                                        <li key={notification.id} className="px-5 py-3 border-b border-lightbrand">
+                                            <div className="flex items-center justify-between gap-1">
+                                                <div className="flex items-center text-xs">
+                                                    <img src={notification.users?.avatar_url || '/default-avatar.png'} alt="Avatar" className="w-10 h-10 rounded-full" />
+                                                    <div className="ml-3">
+                                                        <p><strong>{notification.users?.username}</strong> sent you a {notification.type}</p>
+                                                        <p className="text-xs text-gray">{ETS(notification.created_at)}</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    {notification.type === 'friend_request' && (
+                                                        <div className="flex space-x-2">
+                                                            <Button className={"text-xs"} onClick={() => handleFollowRequest(notification.id, 'accepted', notification.sender_id, notification.recipient_id)}>Accept</Button>
+                                                            <Button className={"bg-secondary text-xs"} onClick={() => handleFollowRequest(notification.id, 'declined', notification.sender_id, notification.recipient_id)}>Decline</Button>
+                                                        </div>
+                                                    )}
+                                                    {notification.status === 'unread' && (
+                                                        <Button onClick={() => markAsRead(notification.id)}>Mark as Read</Button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </section>
                 </div>
-            </section>
-        </main>
+            </main>
+        </>
     )
 }

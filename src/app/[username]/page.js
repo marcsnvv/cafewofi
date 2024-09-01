@@ -111,9 +111,8 @@ export default function User({ params }) {
             // Obtener amigos del usuario visitado
             const { data: visitedUserFriends, error: visitedUserFriendsError } = await supabase
                 .from('friends')
-                .select('friend_id, user_id')
+                .select('friend_id, user_id, status')
                 .or(`user_id.eq.${userData.id},friend_id.eq.${userData.id}`)
-                .eq("status", "accepted")
 
             if (visitedUserFriendsError) {
                 console.log(visitedUserFriendsError)
@@ -134,9 +133,21 @@ export default function User({ params }) {
 
             // Check if is friend
             visitedUserFriends?.map((row) => {
-                if (row.user_id === session.user.id || row.friend_id === session.user.id) {
-                    setIsFriend(true)
-                    console.log("FRIEND!")
+                if (row.user_id === session.user.id && row.friend_id === userData.id) {
+                    if (row.status === "accepted") {
+                        setIsFriend(true)
+                    } else {
+                        console.log(row.status)
+                        setFriendStatus("pending")
+                    }
+                } else {
+                    if (row.friend_id === session.user.id && row.user_id === userData.id) {
+                        if (row.status === "accepted") {
+                            setIsFriend(true)
+                        } else {
+                            setFriendStatus("pending")
+                        }
+                    }
                 }
             })
 
@@ -179,7 +190,6 @@ export default function User({ params }) {
                 console.log(notificationsError)
             }
 
-            setFriendStatus(notificationsData?.status)
             setProfile(userData)
             setReviews(reviewsData)
             setLikes(likesData?.map(like => like.cafes))
@@ -287,7 +297,7 @@ export default function User({ params }) {
                                 {profile?.name}'s reviews
                             </button>
                             <button
-                                className={`p-2 ${activeSection === 'friends' ? 'text-darkgray' : 'text-gray'} rounded-lg`}
+                                className={`p-2 ${activeSection === 'commonFriends' ? 'text-darkgray' : 'text-gray'} rounded-lg`}
                                 onClick={() => setActiveSection('commonFriends')}
                             >
                                 Common friends
