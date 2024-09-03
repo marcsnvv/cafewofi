@@ -14,7 +14,7 @@ export async function WriteReviewAction(formData) {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
         console.log("There is no session to like this cafe :/")
-        return
+        return { error: true, message: "no session" }
     }
 
     const content = formData.get("content")

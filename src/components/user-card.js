@@ -15,7 +15,7 @@ export default function UserCard({ user }) {
 
     return (
         <>
-            {user ? (
+            {user?.avatar_url ? (
                 <Modal
                     variant="user"
                     trigger={

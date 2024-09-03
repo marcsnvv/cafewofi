@@ -5,9 +5,13 @@ import { createClient } from "@/utils/supabase/client"
 import Popup from "@/components/popup"
 import { Flag, ShieldExclamation, Shop, User, CommentCheck } from "../icons"
 import Button from "@/components/button"
+import Login from "./login"
 
 export default function ReportCafePopup({ cafeId, userId }) {
     const supabase = createClient()
+
+    // LOGIN MODAL
+    const [showModal, setShowModal] = useState(false)
 
     const [reportType, setReportType] = useState("") // "owner" or "user"
     const [description, setDescription] = useState("") // Additional information about the report
@@ -17,6 +21,11 @@ export default function ReportCafePopup({ cafeId, userId }) {
     const [hovered, setHovered] = useState(false)
 
     const handleReportSubmit = async () => {
+        if (!userId) {
+            setShowModal(true)
+            return
+        }
+
         const isValid = validateForm()
         if (!isValid) {
             return
@@ -153,8 +162,20 @@ export default function ReportCafePopup({ cafeId, userId }) {
                         {isSubmitting ? "Submitting..." : "Submit Report"}
                     </Button>
                     {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+
+
+                    {showModal && (
+                        <Popup
+                            opened
+                            content={
+                                <Login />
+                            }
+                        />
+                    )}
                 </div >
             )
+
         } />
+
     );
 }

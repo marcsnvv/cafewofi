@@ -11,8 +11,6 @@ import ReviewsForm from "@/components/reviews-form"
 import ScrollGallery from "@/components/scroll-gallery"
 import ReserveButton from "@/components/reserve-button"
 
-import { useFormStatus } from 'react-dom'
-
 // ICONS
 import { Star, Location, Verified, Clock, Flame, Dollar, Phone, Tag, Heart, Share, Flag } from "@/modules/icons"
 // ACTIONS
@@ -20,10 +18,11 @@ import { LikeAction } from "@/app/actions/like"
 import { DislikeAction } from "@/app/actions/dislike"
 import LoadingPage from "@/modules/loading-page"
 import ReportCafePopup from "@/modules/popup/report-cafe"
+import Popup from "@/components/popup"
+import Login from "@/modules/popup/login"
 
 export default function Cafe({ params }) {
     const supabase = createClient()
-    const { pending } = useFormStatus()
 
     const [avatar, setAvatar] = useState()
     const [name, setName] = useState()
@@ -33,39 +32,40 @@ export default function Cafe({ params }) {
     const [isOpened, setIsOpened] = useState()
     const [isBusy, setIsBusy] = useState()
     const [liked, setLiked] = useState(false)
-    const [animating, setAnimating] = useState(false);
+    const [animating, setAnimating] = useState(false)
+
+    const [showModal, setShowModal] = useState(false)
 
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function getData() {
             const { data: { session } } = await supabase.auth.getSession()
-            if (!session) {
-                window.location.href = "/"
-            }
+            // if (!session) {
+            //     window.location.href = "/"
+            // }
             const { data, error } = await supabase
                 .from("cafes")
                 .select("*, likes(*), reviews(*)")
                 .eq("slug_url", params.slug)
 
-            if (data.length === 0) {
-                window.location.href = "/"
-            }
 
             setIsOpened(true)
             setIsBusy(false)
 
-            const { data: user } = await supabase
-                .from("users")
-                .select("avatar_url, name")
-                .eq("id", session.user.id)
+            if (session) {
+                const { data: user } = await supabase
+                    .from("users")
+                    .select("avatar_url, name")
+                    .eq("id", session.user.id)
 
-            setAvatar(user[0].avatar_url)
-            setName(user[0].name)
-            setSid(session.user.id)
+                setAvatar(user[0].avatar_url)
+                setName(user[0].name)
+                setSid(session.user.id)
 
-            const userLike = data[0].likes.find(like => like.user_id === session.user.id)
-            setLiked(!!userLike)
+                const userLike = data[0].likes.find(like => like.user_id === session.user.id)
+                setLiked(!!userLike)
+            }
 
             setData(data[0])
             setLoading(false)
@@ -91,6 +91,12 @@ export default function Cafe({ params }) {
     }
 
     function handleLike() {
+        // Verifica si el usuario está logueado
+        if (!sid) {
+            // Si no está logueado, muestra el popup de login
+            setShowModal(true)
+            return
+        }
         // Cambia el estado de like
         setLiked(!liked);
 
@@ -237,6 +243,14 @@ export default function Cafe({ params }) {
                     </section>
                 )
             }
+            {showModal && (
+                <Popup
+                    opened
+                    content={
+                        <Login />
+                    }
+                />
+            )}
         </main>
     )
 }

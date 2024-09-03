@@ -10,9 +10,13 @@ import Popup from './popup'
 import Button from './button'
 import Reserve from '@/app/actions/reserve'
 import confetti from 'canvas-confetti'
+import Login from '@/modules/popup/login'
 
 const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
     const supabase = createClient()
+
+    // LOGIN POPUP
+    const [showModal, setShowModal] = useState(false)
 
     const [showCalendar, setShowCalendar] = useState(false)
     const [showConfirmPopup, setShowConfirmPopup] = useState(false)
@@ -35,6 +39,10 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
 
     function handleShowCalendar(e) {
         e.preventDefault()
+        if (!userId) {
+            setShowModal(true)
+            return
+        }
         setShowCalendar(!showCalendar)
     }
 
@@ -81,6 +89,14 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
 
     async function handleSubmit(e) {
         e.preventDefault() // Prevent default form submission
+        console.log(userId)
+
+        if (!userId) {
+
+            setShowModal(true)
+            return
+        }
+
         setButtonDisabled(true)
 
         // Verificar si ya hay una reserva en ese día
@@ -188,6 +204,14 @@ const ReserveButton = ({ openingHours, cafeName, cafeId, userId }) => {
                     }
                 />
             }
+            {showModal && (
+                <Popup
+                    opened
+                    content={
+                        <Login />
+                    }
+                />
+            )}
         </>
     )
 }

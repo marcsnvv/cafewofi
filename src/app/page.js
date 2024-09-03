@@ -101,17 +101,17 @@ export default function Home() {
   function searchCW(e) {
     e.preventDefault()
     setLoading(true)
-    if (!user) {
-      setShowModal(true)
+    // if (!user) {
+    //   setShowModal(true)
+    // } else {
+    if (query === undefined || query.trim() === "") {
+      setLoading(false)
+      return
     } else {
-      if (query === undefined || query.trim() === "") {
-        setLoading(false)
-        return
-      } else {
-        let q = query.toLowerCase().split(" ")
-        router.push(`/search/${q.join("/")}`)
-      }
+      let q = query.toLowerCase().split(" ")
+      router.push(`/search/${q.join("/")}`)
     }
+    // }
 
   }
 

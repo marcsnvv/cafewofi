@@ -1,13 +1,27 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Star, PaperPlane } from "@/modules/icons"
 import Button from "@/components/button"
 import { WriteReviewAction } from "@/app/actions/write-review"
+import Popup from "./popup"
+import Login from "@/modules/popup/login"
+import { useFormStatus } from 'react-dom'
 
 export default function ReviewsForm({ cafeId, cafeSlug, authorId }) {
+    const status = useFormStatus()
+
     const [reviewStars, setReviewStars] = useState(0)
     const [formError, setFormError] = useState(null)
+
+    // LOGIN MODAL
+    const [showModal, setShowModal] = useState(false)
+
+
+    useEffect(() => {
+        console.log(status)
+    }, [status])
+
 
     function validateForm(event) {
         event.preventDefault();
@@ -24,6 +38,11 @@ export default function ReviewsForm({ cafeId, cafeSlug, authorId }) {
         if (content.length < 10) {
             setFormError('Content must be at least 10 characters long.');
             return;
+        }
+
+        if (!authorId) {
+            setShowModal(true)
+            return
         }
 
         console.log('Form validated successfully!');
@@ -75,6 +94,15 @@ export default function ReviewsForm({ cafeId, cafeSlug, authorId }) {
             {formError &&
                 <span className="text-red-500">{formError}</span>
             }
+
+            {showModal && (
+                <Popup
+                    opened
+                    content={
+                        <Login />
+                    }
+                />
+            )}
         </div>
     )
 }
