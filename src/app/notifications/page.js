@@ -141,7 +141,7 @@ export default function Notifications() {
                         <h2 className="text-2xl font-semibold">Notifications</h2>
                         <div className="mt-14">
                             {notifications.length === 0 ? (
-                                <div className="mt-56 h-full w-screen flex items-center justify-center">
+                                <div className="mt-56">
                                     <div className="flex flex-col items-center justify-center gap-5">
                                         <Image src="/notfound.png" width={150} height={150} alt="Not Found" />
                                         <span className="text-lg font-nyght">Nothing here...</span>
