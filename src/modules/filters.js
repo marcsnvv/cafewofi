@@ -61,8 +61,8 @@ const Filters = ({ props, setPlaceData, cafes }) => {
         if (props.place) {
             const placeLower = props.place.toLowerCase();
             updatedPlaces = updatedPlaces.filter(coffee =>
-                coffee.address?.toLowerCase().includes(placeLower) || coffee.name.toLowerCase().includes(placeLower)
-            );
+                coffee.address?.toLowerCase().includes(placeLower) // || coffee.name.toLowerCase().includes(placeLower)
+            )
         }
 
         // Filtrar por términos de poi y otros filtros
