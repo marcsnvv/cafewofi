@@ -7,7 +7,7 @@ import Image from "next/image"
 import { createClient } from "@/utils/supabase/client"
 
 import { useRouter } from 'next/navigation'
-import { Search, User } from "@/modules/icons"
+import { Search } from "@/modules/icons"
 import Loading from "@/components/loading"
 
 import UserCard from "@/components/user-card"
@@ -134,6 +134,7 @@ export default function Home() {
         <Link href={"/"}>
           <Image src={"/cwf.png"} width={50} height={50} />
         </Link>
+
         <UserCard user={user} />
       </nav>
 

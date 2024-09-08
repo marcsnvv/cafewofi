@@ -1,6 +1,6 @@
 "use client"
 
-import { Bulb, User, Settings, SignOut, Bell } from "@/modules/icons"
+import { Bulb, User, Settings, SignOut, Bell, Diamond } from "@/modules/icons"
 import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase/client"
 import Link from "next/link"
@@ -35,6 +35,12 @@ export default function UserModal() {
             <Link href={"/about"} className="cursor-pointer flex items-center justify-start p-4 hover:bg-lightgray">
                 <Bulb color="#111111" />
                 <span className="ml-4">About CWF</span>
+            </Link>
+            <hr className="border-t border-gray" />
+            <Link href={"/milestones"} className="cursor-pointer flex items-center justify-start p-4 hover:bg-lightgray relative">
+                <Diamond color="#111111" />
+                <span className="ml-4">Milestones</span>
+                <span className="absolute right-4 bg-brand text-white text-xs font-bold px-2 py-1 rounded-full">New</span>
             </Link>
             <hr className="border-t border-gray" />
             <Link href={"/account"} className="flex items-center justify-start p-4 hover:bg-lightgray">

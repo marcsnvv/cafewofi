@@ -1,20 +1,50 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { createClient } from "@/utils/supabase/client"
 
 import Modal from "./modal"
 import Popup from "./popup"
-import { User } from "@/modules/icons"
+import { User, Diamond } from "@/modules/icons"
 import Label from "./label"
 import Login from "@/modules/popup/login"
 import UserModal from "@/modules/modals/user"
 
 export default function UserCard({ user }) {
+    const supabase = createClient()
+    const [points, setPoints] = useState()
+
+    useEffect(() => {
+        async function getData() {
+            const { data: { session } } = await supabase.auth.getSession()
+            const { data, error } = await supabase
+                .from("points")
+                .select("total_points")
+                .eq("user_id", session.user.id)
+
+            if (error) {
+                setPoints(0)
+                console.error(error)
+            } else {
+                if (!data) {
+                    setPoints(0)
+                } else {
+                    setPoints(data[0].total_points)
+                }
+            }
+        }
+
+        getData()
+    }, [user])
 
     return (
-        <>
+        <div className="flex gap-5 items-center justify-center">
+            <Link href={"/milestones"} className="px-2 py-1 gap-2 flex items-center justify-centerp-2 rounded-full bg-white text-gray">
+                <Diamond color="#CC7843" />
+                <span>{points}</span>
+            </Link>
             {user?.avatar_url ? (
                 <Modal
                     variant="user"
@@ -41,6 +71,6 @@ export default function UserCard({ user }) {
                     }
                 />
             )}
-        </>
+        </div>
     )
 }

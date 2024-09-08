@@ -7,6 +7,9 @@ import ReservationEmail from "@/emails/reservation"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+// Establecer cantidad de puntos por hacer esta accion
+const POINTS_PER_THIS_ACTION = 15
+
 export default async function Reserve({ userId, cafeId, reservationDate, reservationTime }) {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
@@ -58,6 +61,37 @@ export default async function Reserve({ userId, cafeId, reservationDate, reserva
     } catch (emailError) {
         console.error("Error sending email:", emailError)
         return { status: "error", message: 'Reservation made, but failed to send confirmation email.' }
+    }
+
+    // Añadir puntos
+
+    const { data: points } = await supabase
+        .from("points")
+        .select('total_points')
+        .eq('user_id', userId)
+        .single()
+
+    if (points) {
+        // Actualizar los puntos existentes
+        const { error: updateError } = await supabase
+            .from('points')
+            .update({ total_points: points.total_points + POINTS_PER_THIS_ACTION })
+            .eq('user_id', userId)
+
+        if (updateError) {
+            console.error("Error al actualizar puntos:", updateError)
+            return { status: "error", message: 'Reserva realizada, pero falló la actualización de puntos.' }
+        }
+    } else {
+        // Crear una nueva entrada de puntos
+        const { error: insertError } = await supabase
+            .from('points')
+            .insert([{ user_id: userId, total_points: POINTS_PER_THIS_ACTION }])
+
+        if (insertError) {
+            console.error("Error al insertar puntos:", insertError)
+            return { status: "error", message: 'Reserva realizada, pero falló la creación de puntos.' }
+        }
     }
 
     return { status: "success", message: data }
